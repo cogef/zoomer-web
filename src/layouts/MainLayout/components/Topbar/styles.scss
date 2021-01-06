@@ -1,0 +1,22 @@
+.topbar {
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  background-color: #1f1f1f;
+  color: white;
+
+  .title {
+    margin-left: 40px;
+
+    &__zoom {
+      color: #49adff;
+      font-weight: bold;
+    }
+  }
+}

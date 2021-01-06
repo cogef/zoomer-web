@@ -1,0 +1,29 @@
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #323232;
+  color: white;
+
+  * {
+    animation: show 1s linear 1s both;
+  }
+
+  .spinner {
+    margin: 0 20px;
+  }
+}
+
+@keyframes show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
