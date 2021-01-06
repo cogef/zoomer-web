@@ -1,0 +1,34 @@
+# Workflow to run a test build when changes are made to dev
+name: dev-build
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains "build" and "deploy" jobs
+  build:
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checkout master branch
+      - uses: actions/checkout@v2
+        with:
+          ref: dev
+      
+      # Install npm packages
+      - name: Install dependencies
+        run: npm install
+        
+      # Run npm build process
+      - name: Build
+        run: npm run build
