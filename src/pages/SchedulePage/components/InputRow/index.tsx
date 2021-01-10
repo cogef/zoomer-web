@@ -5,10 +5,10 @@ import React from 'react';
 export const InputRow = (props: Props) => {
   return (
     <Grid className='input-row' container>
-      <Grid item md={2}>
-        <Typography className='label'>{props.label}</Typography>
+      <Grid item xs={12} md={3} lg={2}>
+        <Typography className='label'>{props.label || ''}</Typography>
       </Grid>
-      <Grid item md={5}>
+      <Grid item xs={12} md={9} lg={5}>
         {props.children}
       </Grid>
     </Grid>
@@ -16,6 +16,6 @@ export const InputRow = (props: Props) => {
 };
 
 type Props = {
-  label: string;
+  label?: string;
   children: React.ReactNode;
 };

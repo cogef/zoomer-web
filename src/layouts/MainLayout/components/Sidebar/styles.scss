@@ -9,4 +9,9 @@
   bottom: 0;
   width: var(--sidebar-width);
   background-color: #323232;
+
+  .separator {
+    height: 20px;
+    background-color: #9e9e9e;
+  }
 }

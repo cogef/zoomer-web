@@ -1,41 +1,36 @@
 import './styles.scss';
-import {
-  Button,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from '@material-ui/core';
+import { Button, Checkbox, FormControl, FormControlLabel, MenuItem, Select, TextField } from '@material-ui/core';
 import { Page } from 'components/Page';
 import { InputRow } from './components/InputRow';
 import { Section } from './components/Section';
-import { ministries } from 'utils/constants/cogef';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
-import addMinutes from 'date-fns/addMinutes';
+import { addMinutes, addMonths } from 'date-fns';
 import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { InputSubRow } from './components/InputSubRow';
+import { recurrenceIntervals, recurrencesOcurrs, recurrenceTypes, ministries } from 'utils/constants';
+import { formatSingularity, entriesOf, getDotNotationProp, keysOf } from 'utils/functions';
 
 export const SchedulePage = () => {
   const formik = useFormik({
     initialValues,
-    validationSchema: getSchema(),
+    validationSchema: () => yup.lazy(values => getSchema(values)),
     onSubmit: values => {
       console.log({ values });
     },
   });
 
   const hasError = (name: Value) => {
-    return Boolean(formik.touched[name] && formik.errors[name]);
+    return Boolean(getDotNotationProp(name, formik.touched) && getDotNotationProp(name, formik.errors));
   };
 
   const getHelperText = (name: Value) => {
-    return formik.touched[name] && formik.errors[name];
+    return getDotNotationProp(name, formik.touched) && getDotNotationProp(name, formik.errors);
   };
+
+  console.log({ errors: formik.errors, values: formik.values });
 
   return (
     <Page className='schedule-page' title='Schedule a Meeting'>
@@ -112,8 +107,11 @@ export const SchedulePage = () => {
             <FormControl className='select-control' margin='dense'>
               <FormControlLabel
                 label='hr'
+                className='duration-control'
                 control={
                   <Select
+                    className='form-control-select'
+                    MenuProps={{ PaperProps: { className: 'select-menu' } }}
                     variant='outlined'
                     name='hours'
                     value={formik.values.hours}
@@ -133,8 +131,10 @@ export const SchedulePage = () => {
             <FormControl className='select-control' margin='dense'>
               <FormControlLabel
                 label='min'
+                className='duration-control'
                 control={
                   <Select
+                    className='form-control-select'
                     variant='outlined'
                     name='minutes'
                     value={formik.values.minutes}
@@ -153,7 +153,7 @@ export const SchedulePage = () => {
             </FormControl>
           </InputRow>
           <InputRow label=''>
-            <FormControl className='select-control' margin='dense' fullWidth>
+            <FormControl margin='dense' fullWidth>
               <FormControlLabel
                 label='Recurring Meeting'
                 control={
@@ -167,6 +167,80 @@ export const SchedulePage = () => {
               />
             </FormControl>
           </InputRow>
+          {formik.values.isRecurring && (
+            <>
+              <InputSubRow label='Recurrence'>
+                <Select
+                  variant='outlined'
+                  name='recurrence.type'
+                  value={formik.values.recurrence.type}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={hasError('recurrence.type' as any)}
+                >
+                  {entriesOf(recurrenceTypes).map(([id, { label }]) => (
+                    <MenuItem key={id} value={id}>
+                      {label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </InputSubRow>
+              <InputSubRow label='Repeat every'>
+                <FormControl className='select-control' margin='dense' fullWidth>
+                  <FormControlLabel
+                    label={formatSingularity(
+                      recurrenceTypes[formik.values.recurrence.type].unit,
+                      formik.values.recurrence.interval
+                    )}
+                    className='duration-control'
+                    control={
+                      <Select
+                        className='form-control-select'
+                        variant='outlined'
+                        name='recurrence.interval'
+                        value={formik.values.recurrence.interval}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={hasError('recurrence.interval' as any)}
+                      >
+                        {recurrenceIntervals[formik.values.recurrence.type].map(interval => (
+                          <MenuItem key={interval} value={interval}>
+                            {interval}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    }
+                  />
+                </FormControl>
+              </InputSubRow>
+              <InputSubRow label='End date'>
+                <FormControl className='select-control' margin='dense'>
+                  <FormControlLabel
+                    label='occurrences'
+                    className='duration-control'
+                    control={
+                      <Select
+                        className='form-control-select'
+                        MenuProps={{ PaperProps: { className: 'select-menu' } }}
+                        variant='outlined'
+                        name='recurrence.end_times'
+                        value={formik.values.recurrence.end_times}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={hasError('recurrence.end_times' as any)}
+                      >
+                        {recurrencesOcurrs.map(occ => (
+                          <MenuItem key={occ} value={occ}>
+                            {occ}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    }
+                  />
+                </FormControl>
+              </InputSubRow>
+            </>
+          )}
         </Section>
 
         <Section>
@@ -186,7 +260,7 @@ export const SchedulePage = () => {
           <InputRow label=''>
             <FormControl className='select-control' margin='dense' fullWidth>
               <FormControlLabel
-                label='Recurring Meeting'
+                label='Waiting Room'
                 control={
                   <Checkbox
                     name='hasWaitingRoom'
@@ -256,14 +330,23 @@ export const SchedulePage = () => {
   );
 };
 
+const minDate = () => addMinutes(new Date(), 15);
+
 const initialValues = {
   topic: '',
   description: '',
   ministry: '',
-  date: new Date(),
+  date: minDate(),
   hours: 1,
   minutes: 0,
   isRecurring: false,
+  recurrence: {
+    type: 1 as keyof typeof recurrenceTypes,
+    interval: 1,
+    endType: 'date' as 'date' | 'occ',
+    end_times: 7,
+    end_date_time: addMonths(minDate(), 3),
+  },
   passcode: '',
   hasWaitingRoom: false,
   canJoinAnytime: false,
@@ -273,10 +356,9 @@ const initialValues = {
 
 type Value = keyof typeof initialValues;
 
-const minDate = () => addMinutes(new Date(), 15);
 const durMinutes = [0, 15, 30, 45];
 
-const getSchema = () =>
+const getSchema = (values: typeof initialValues) =>
   yup.object({
     topic: yup.string().required(),
     description: yup.string().max(1800, 'Must be 1800 characters or less'),
@@ -292,8 +374,21 @@ const getSchema = () =>
     hours: yup.number().min(0).max(24).required(),
     minutes: yup.number().oneOf(durMinutes).required(),
     isRecurring: yup.boolean().required(),
+    recurrence: values.isRecurring
+      ? yup.object({
+          type: yup.number().oneOf(keysOf(recurrenceTypes).map(Number)).required(),
+          interval: yup.number().oneOf(recurrenceIntervals[values.recurrence.type]).required(),
+          endType: yup.string().oneOf(['date', 'occ']).required(),
+          end_times:
+            values.recurrence.endType === 'occ' ? yup.number().oneOf(recurrencesOcurrs).required() : yup.number(),
+          end_date_time:
+            values.recurrence.endType === 'date'
+              ? yup.date().min(minDate(), 'date must be in the future').typeError('invalid date').required()
+              : yup.date(),
+        })
+      : yup.object(),
     passcode: yup.string().required(),
-    hasWaitingroom: yup.boolean().required(),
+    hasWaitingRoom: yup.boolean().required(),
     canJoinAnytime: yup.boolean().required(),
     muteParticipants: yup.boolean().required(),
     autoRecord: yup.boolean().required(),

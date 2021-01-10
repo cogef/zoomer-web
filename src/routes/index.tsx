@@ -1,3 +1,4 @@
+import { ManagePage } from 'pages/ManagePage';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { PrivateRoute } from '../components/PrivateRoute';
 import { MainLayout } from '../layouts/MainLayout';
@@ -6,8 +7,8 @@ import { SchedulePage } from '../pages/SchedulePage';
 
 export const RootRoute = () => (
   <Switch>
-    <Route path='/404'>Not Found</Route>
-    <Route path='/login'>
+    <Route path={routes.NOT_FOUND}>Not Found</Route>
+    <Route path={routes.LOGIN}>
       <LoginPage />
     </Route>
     <PageRoute />
@@ -17,13 +18,25 @@ export const RootRoute = () => (
 const PageRoute = () => (
   <MainLayout>
     <Switch>
-      <Redirect exact from='/' to='/schedule' />
+      <Redirect exact from={routes.HOME} to={routes.HOME} />
 
-      <PrivateRoute path='/schedule'>
+      <PrivateRoute exact path={routes.SCHEDULE}>
         <SchedulePage />
       </PrivateRoute>
 
-      <Redirect to='/404' />
+      <PrivateRoute exact path={routes.MANAGE}>
+        <ManagePage />
+      </PrivateRoute>
+
+      <Redirect to={routes.NOT_FOUND} />
     </Switch>
   </MainLayout>
 );
+
+export const routes = {
+  HOME: '/',
+  LOGIN: '/login',
+  NOT_FOUND: '/404',
+  SCHEDULE: '/schedule',
+  MANAGE: '/manage',
+};

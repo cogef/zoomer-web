@@ -1,5 +1,16 @@
 .schedule-page {
   .select-control {
     margin: 0;
+
+    .duration-control {
+      margin: 0 10px 0 0;
+    }
+    .form-control-select {
+      margin-right: 5px;
+    }
   }
+}
+/* popup menu with select options */
+.select-menu {
+  max-height: 200px !important;
 }

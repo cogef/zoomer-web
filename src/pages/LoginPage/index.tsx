@@ -2,6 +2,7 @@ import './styles.scss';
 import { Button, Paper, Typography } from '@material-ui/core';
 import { login, useAuth } from '../../utils/auth';
 import { Redirect } from 'react-router-dom';
+import { Topbar } from 'layouts/MainLayout/components/Topbar';
 
 export const LoginPage = () => {
   const [user] = useAuth();
@@ -12,8 +13,9 @@ export const LoginPage = () => {
 
   return (
     <div className='login-page'>
+      <Topbar />
       <Paper className='login-card'>
-        <Typography>Stuff</Typography>
+        <Typography>Sign in to use the site</Typography>
         <Button variant='contained' onClick={login}>
           Sign in with Google
         </Button>
