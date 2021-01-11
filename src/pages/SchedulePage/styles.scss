@@ -2,11 +2,16 @@
   .select-control {
     margin: 0;
 
-    .duration-control {
-      margin: 0 10px 0 0;
-    }
     .form-control-select {
       margin-right: 5px;
+    }
+  }
+  .inline {
+    margin-right: 20px;
+    justify-content: center; // for flex column container
+
+    .form-control-label {
+      margin: 0;
     }
   }
 }

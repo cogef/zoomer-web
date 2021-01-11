@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { AuthProvider } from './utils/auth';
+import 'services/dev';
 
 ReactDOM.render(
   <React.StrictMode>

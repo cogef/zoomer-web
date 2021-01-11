@@ -18,7 +18,7 @@ export const RootRoute = () => (
 const PageRoute = () => (
   <MainLayout>
     <Switch>
-      <Redirect exact from={routes.HOME} to={routes.HOME} />
+      <Redirect exact from={routes.HOME} to={routes.SCHEDULE} />
 
       <PrivateRoute exact path={routes.SCHEDULE}>
         <SchedulePage />

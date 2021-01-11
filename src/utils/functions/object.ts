@@ -7,7 +7,7 @@ export const keysOf = Object.keys as <T extends Object>(obj: T) => (keyof T)[];
 /**
  * Returns the value of a nested object property using a dot notation path
  *
- *  E.g. Given `path = 'nested.prop'` and `obj = {nested: {prop: 1}}`
+ *  E.g. Given `path = 'nested.prop'` and `obj = {nested: {attr: 0, prop: 1}}`
  *  Return `1`
  */
 export const getDotNotationProp = (path: string, obj: Record<string, any>): any => {

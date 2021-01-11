@@ -1,9 +1,9 @@
 export type MeetingRequest = {
   topic: string;
-  type: number;
+  type: 2 | 8; // 1 | 2 | 3 | 8;
   start_time: string; // [date-time];
   duration: number;
-  schedule_for: string;
+  schedule_for?: never; // string;
   timezone: string;
   password: string;
   agenda: string;
@@ -28,8 +28,8 @@ export type MeetingRequest = {
     use_pmi: boolean;
     approval_type: number;
     registration_type: number;
-    audio: string;
-    auto_recording: string;
+    audio?: never; //'both' | 'telephony' | 'voip';
+    auto_recording?: 'local'; //'local' | 'cloud' | 'none';
     enforce_login: boolean;
     enforce_login_domains: string;
     alternative_hosts: string;
