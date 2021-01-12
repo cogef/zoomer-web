@@ -78,12 +78,12 @@ export const SchedulePage = () => {
                 variant='outlined'
                 size='small'
                 fullWidth
-                name='description'
-                value={formik.values.description}
+                name='agenda'
+                value={formik.values.agenda}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                error={hasError('description')}
-                helperText={getHelperText('description')}
+                error={hasError('agenda')}
+                helperText={getHelperText('agenda')}
               />
             </InputRow>
             <InputRow label='Ministry'>
@@ -114,12 +114,12 @@ export const SchedulePage = () => {
                 format='MM/dd/yyyy hh:mm a'
                 margin='dense'
                 minDate={minDate()}
-                name='date'
-                value={formik.values.date}
-                onChange={value => formik.setFieldValue('date', value)}
+                name='start_time'
+                value={formik.values.start_time}
+                onChange={value => formik.setFieldValue('start_time', value)}
                 onBlur={formik.handleBlur}
-                error={hasError('date')}
-                helperText={getHelperText('date')}
+                error={hasError('start_time')}
+                helperText={getHelperText('start_time')}
               />
             </InputRow>
             <InputRow label='Duration'>
@@ -132,11 +132,11 @@ export const SchedulePage = () => {
                       className='form-control-select'
                       MenuProps={{ PaperProps: { className: 'select-menu' } }}
                       variant='outlined'
-                      name='hours'
-                      value={formik.values.hours}
+                      name='duration.hours'
+                      value={formik.values.duration.hours}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      error={hasError('hours')}
+                      error={hasError('duration.hours' as any)}
                     >
                       {range(0, 24).map(num => (
                         <MenuItem key={num} value={num}>
@@ -155,11 +155,11 @@ export const SchedulePage = () => {
                     <Select
                       className='form-control-select'
                       variant='outlined'
-                      name='minutes'
-                      value={formik.values.minutes}
+                      name='duration.minutes'
+                      value={formik.values.duration.minutes}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      error={hasError('minutes')}
+                      error={hasError('duration.minutes' as any)}
                     >
                       {durMinutes.map(min => (
                         <MenuItem key={min} value={min}>
@@ -431,8 +431,8 @@ export const SchedulePage = () => {
                   label='Waiting Room'
                   control={
                     <Checkbox
-                      name='hasWaitingRoom'
-                      checked={formik.values.hasWaitingRoom}
+                      name='settings.waiting_room'
+                      checked={formik.values.settings.waiting_room}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
@@ -478,8 +478,8 @@ export const SchedulePage = () => {
                   label='Allow participants to join anytime'
                   control={
                     <Checkbox
-                      name='canJoinAnytime'
-                      checked={formik.values.canJoinAnytime}
+                      name='settings.join_before_host'
+                      checked={formik.values.settings.join_before_host}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
@@ -493,8 +493,8 @@ export const SchedulePage = () => {
                   label='Mute participants upon entry'
                   control={
                     <Checkbox
-                      name='muteParticipants'
-                      checked={formik.values.muteParticipants}
+                      name='settings.mute_upon_entry'
+                      checked={formik.values.settings.mute_upon_entry}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
@@ -508,8 +508,8 @@ export const SchedulePage = () => {
                   label='Automatically record meeting on the local computer'
                   control={
                     <Checkbox
-                      name='autoRecord'
-                      checked={formik.values.autoRecord}
+                      name='settings.auto_recording'
+                      checked={formik.values.settings.auto_recording}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
@@ -532,11 +532,13 @@ const minDate = () => addMinutes(new Date(), 15);
 
 const initialValues = {
   topic: '',
-  description: '',
+  agenda: '',
   ministry: '',
-  date: minDate(),
-  hours: 1,
-  minutes: 0,
+  start_time: minDate(),
+  duration: {
+    hours: 1,
+    minutes: 0,
+  },
   isRecurring: false,
   recurrence: {
     type: 1 as keyof typeof recurrenceTypes,
@@ -551,14 +553,14 @@ const initialValues = {
     end_date_time: addMonths(minDate(), 3),
   },
   passcode: '',
-  hasWaitingRoom: false,
   settings: {
+    waiting_room: false,
     host_video: false,
     participant_video: false,
+    join_before_host: false,
+    mute_upon_entry: true,
+    auto_recording: false,
   },
-  canJoinAnytime: false,
-  muteParticipants: true,
-  autoRecord: false,
 };
 
 type Value = keyof typeof initialValues;
@@ -568,18 +570,22 @@ const durMinutes = [0, 15, 30, 45];
 const getSchema = (values: typeof initialValues) =>
   yup.object({
     topic: yup.string().required(),
-    description: yup.string().max(1800, 'Must be 1800 characters or less'),
+    agenda: yup.string().max(1800, 'Must be 1800 characters or less'),
     ministry: yup
       .string()
       .oneOf(ministries.map(m => m[0]))
       .required(),
-    date: yup
+    start_time: yup
       .date()
       .min(minDate(), 'date must be at least 15 minutes in the future')
       .typeError('invalid date')
       .required(),
-    hours: yup.number().integer().min(0).max(24).required(),
-    minutes: yup.number().oneOf(durMinutes).required(),
+    duration: yup
+      .object({
+        hours: yup.number().integer().min(0).max(24).required(),
+        minutes: yup.number().oneOf(durMinutes).required(),
+      })
+      .required(),
     isRecurring: yup.boolean().required(),
     recurrence: values.isRecurring
       ? yup.object({
@@ -608,12 +614,12 @@ const getSchema = (values: typeof initialValues) =>
         })
       : yup.mixed(),
     passcode: yup.string().max(10).required(),
-    hasWaitingRoom: yup.boolean().required(),
     settings: yup.object({
+      waiting_room: yup.boolean().required(),
       host_video: yup.bool().required(),
       participant_video: yup.bool().required(),
+      join_before_host: yup.boolean().required(),
+      mute_upon_entry: yup.boolean().required(),
+      auto_recording: yup.boolean().required(),
     }),
-    canJoinAnytime: yup.boolean().required(),
-    muteParticipants: yup.boolean().required(),
-    autoRecord: yup.boolean().required(),
   });
