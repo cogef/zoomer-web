@@ -410,7 +410,7 @@ export const SchedulePage = () => {
             )}
           </Section>
 
-          {/* Passcode Section */}
+          {/* Security Section */}
           <Section>
             <InputRow label='Passcode'>
               <TextField
@@ -440,6 +440,34 @@ export const SchedulePage = () => {
                 />
               </FormControl>
             </InputRow>
+          </Section>
+
+          {/* Video Section */}
+          <Section>
+            <InputSubRow topLabel='Video' label='Host'>
+              <RadioGroup
+                row
+                name='settings.host_video'
+                value={formik.values.settings.host_video ? 'on' : 'off'}
+                onChange={e => formik.setFieldValue('settings.host_video', e.target.value === 'on')}
+                onBlur={formik.handleBlur}
+              >
+                <FormControlLabel label='on' value={'on'} control={<Radio />} />
+                <FormControlLabel label='off' value={'off'} control={<Radio />} />
+              </RadioGroup>
+            </InputSubRow>
+            <InputSubRow label='Participant'>
+              <RadioGroup
+                row
+                name='settings.participant_video'
+                value={formik.values.settings.participant_video ? 'on' : 'off'}
+                onChange={e => formik.setFieldValue('settings.participant_video', e.target.value === 'on')}
+                onBlur={formik.handleBlur}
+              >
+                <FormControlLabel label='on' value={'on'} control={<Radio />} />
+                <FormControlLabel label='off' value={'off'} control={<Radio />} />
+              </RadioGroup>
+            </InputSubRow>
           </Section>
 
           {/* Options Section */}
@@ -524,6 +552,10 @@ const initialValues = {
   },
   passcode: '',
   hasWaitingRoom: false,
+  settings: {
+    host_video: false,
+    participant_video: false,
+  },
   canJoinAnytime: false,
   muteParticipants: true,
   autoRecord: false,
@@ -577,6 +609,10 @@ const getSchema = (values: typeof initialValues) =>
       : yup.mixed(),
     passcode: yup.string().max(10).required(),
     hasWaitingRoom: yup.boolean().required(),
+    settings: yup.object({
+      host_video: yup.bool().required(),
+      participant_video: yup.bool().required(),
+    }),
     canJoinAnytime: yup.boolean().required(),
     muteParticipants: yup.boolean().required(),
     autoRecord: yup.boolean().required(),
