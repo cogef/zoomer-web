@@ -1,6 +1,8 @@
 .schedule-page {
   .select-control {
     margin: 0;
+    margin-right: 3px;
+    justify-content: center; // for flex column container
 
     .form-control-select {
       margin-right: 5px;

@@ -21,7 +21,14 @@ import DateFnsUtils from '@date-io/date-fns';
 import { addMinutes, addMonths } from 'date-fns';
 import { KeyboardDatePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { InputSubRow } from './components/InputSubRow';
-import { recurrenceIntervals, recurrenceOcurrs, recurrenceTypes, ministries, recurrenceWeeks } from 'utils/constants';
+import {
+  recurrenceMaxIntervals,
+  recurrenceOcurrs,
+  recurrenceTypes,
+  ministries,
+  recurrenceWeekDays,
+  recurrenceMonthlyWeeks,
+} from 'utils/constants';
 import { formatSingularity, entriesOf, getDotNotationProp, keysOf, range } from 'utils/functions';
 
 export const SchedulePage = () => {
@@ -131,7 +138,7 @@ export const SchedulePage = () => {
                       onBlur={formik.handleBlur}
                       error={hasError('hours')}
                     >
-                      {range(25).map(num => (
+                      {range(1, 25).map(num => (
                         <MenuItem key={num} value={num}>
                           {num}
                         </MenuItem>
@@ -215,7 +222,7 @@ export const SchedulePage = () => {
                           onBlur={formik.handleBlur}
                           error={hasError('recurrence.repeat_interval' as any)}
                         >
-                          {recurrenceIntervals[formik.values.recurrence.type].map(interval => (
+                          {range(1, recurrenceMaxIntervals[formik.values.recurrence.type]).map(interval => (
                             <MenuItem key={interval} value={interval}>
                               {interval}
                             </MenuItem>
@@ -228,10 +235,10 @@ export const SchedulePage = () => {
                 {formik.values.recurrence.type === 2 && (
                   <InputSubRow label='Occurs on'>
                     <FormGroup row>
-                      {entriesOf(recurrenceWeeks).map(([id, week], idx) => (
+                      {entriesOf(recurrenceWeekDays).map(([id, { short }], idx) => (
                         <FormControl key={id} margin='dense'>
                           <FormControlLabel
-                            label={week}
+                            label={short}
                             className='form-control-label'
                             control={
                               <Checkbox
@@ -245,6 +252,97 @@ export const SchedulePage = () => {
                         </FormControl>
                       ))}
                     </FormGroup>
+                  </InputSubRow>
+                )}
+                {formik.values.recurrence.type === 3 && (
+                  <InputSubRow label='Occurs on'>
+                    <RadioGroup
+                      name='recurrence.monthlyType'
+                      value={formik.values.recurrence.monthlyType}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    >
+                      <FormGroup row>
+                        <FormControl margin='dense'>
+                          <FormControlLabel label='Day' value='day' control={<Radio />} />
+                        </FormControl>
+                        <FormControl className='select-control inline' margin='dense'>
+                          <FormControlLabel
+                            className='form-control-label'
+                            label='of the month'
+                            control={
+                              <Select
+                                className='form-control-select'
+                                MenuProps={{ PaperProps: { className: 'select-menu' } }}
+                                variant='outlined'
+                                name='recurrence.monthly_day'
+                                value={formik.values.recurrence.monthly_day}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                error={hasError('recurrence.monthly_day' as any)}
+                                disabled={formik.values.recurrence.monthlyType !== 'day'}
+                              >
+                                {range(1, 31).map(day => (
+                                  <MenuItem key={day} value={day}>
+                                    {day}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            }
+                          />
+                        </FormControl>
+                      </FormGroup>
+
+                      <FormGroup row>
+                        <FormControl margin='dense'>
+                          <FormControlLabel label='The' value='week' control={<Radio />} />
+                        </FormControl>
+                        <FormControl className='select-control' margin='dense'>
+                          <Select
+                            //className='form-control-select'
+                            MenuProps={{ PaperProps: { className: 'select-menu' } }}
+                            variant='outlined'
+                            name='recurrence.monthly_week'
+                            value={formik.values.recurrence.monthly_week}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={hasError('recurrence.monthly_week' as any)}
+                            disabled={formik.values.recurrence.monthlyType !== 'week'}
+                          >
+                            {entriesOf(recurrenceMonthlyWeeks).map(([id, label]) => (
+                              <MenuItem key={id} value={Number(id)}>
+                                {label}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                        <FormControl className='select-control inline' margin='dense'>
+                          <FormControlLabel
+                            label='of the month'
+                            className='form-control-label'
+                            control={
+                              <Select
+                                className='form-control-select'
+                                MenuProps={{ PaperProps: { className: 'select-menu' } }}
+                                variant='outlined'
+                                name='recurrence.monthly_week_day'
+                                value={formik.values.recurrence.monthly_week_day}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                error={hasError('recurrence.monthly_week_day' as any)}
+                                disabled={formik.values.recurrence.monthlyType !== 'week'}
+                              >
+                                {entriesOf(recurrenceWeekDays).map(([id, { long }]) => (
+                                  <MenuItem key={id} value={id}>
+                                    {long}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            }
+                          />
+                        </FormControl>
+                      </FormGroup>
+                    </RadioGroup>
                   </InputSubRow>
                 )}
                 <InputSubRow label='End date'>
@@ -277,7 +375,7 @@ export const SchedulePage = () => {
                     </FormGroup>
 
                     <FormGroup row>
-                      <FormControl className='inline' margin='dense'>
+                      <FormControl margin='dense'>
                         <FormControlLabel label='After' value='occ' control={<Radio />} />
                       </FormControl>
                       <FormControl className='select-control inline' margin='dense'>
@@ -416,6 +514,10 @@ const initialValues = {
     type: 1 as keyof typeof recurrenceTypes,
     repeat_interval: 1,
     weekly_days: [false, false, false, false, false, false, false],
+    monthlyType: 'day' as 'day' | 'week',
+    monthly_day: 1,
+    monthly_week: 1,
+    monthly_week_day: 1,
     endType: 'date' as 'date' | 'occ',
     end_times: 7,
     end_date_time: addMonths(minDate(), 3),
@@ -444,14 +546,26 @@ const getSchema = (values: typeof initialValues) =>
       .min(minDate(), 'date must be at least 15 minutes in the future')
       .typeError('invalid date')
       .required(),
-    hours: yup.number().min(0).max(24).required(),
+    hours: yup.number().integer().min(0).max(24).required(),
     minutes: yup.number().oneOf(durMinutes).required(),
     isRecurring: yup.boolean().required(),
     recurrence: values.isRecurring
       ? yup.object({
           type: yup.number().oneOf(keysOf(recurrenceTypes).map(Number)).required(),
-          repeat_interval: yup.number().oneOf(recurrenceIntervals[values.recurrence.type]).required(),
+          repeat_interval: yup.number().integer().min(1).max(recurrenceMaxIntervals[values.recurrence.type]).required(),
           weekly_days: values.recurrence.type === 2 ? yup.array().of(yup.bool()).required() : yup.mixed(),
+          monthly_day:
+            values.recurrence.type === 3 && values.recurrence.monthlyType === 'day'
+              ? yup.number().integer().min(1).max(31).required()
+              : yup.mixed(),
+          monthly_week:
+            values.recurrence.type === 3 && values.recurrence.monthlyType === 'week'
+              ? yup.number().oneOf(keysOf(recurrenceMonthlyWeeks).map(Number)).required()
+              : yup.mixed(),
+          monthly_week_day:
+            values.recurrence.type === 3 && values.recurrence.monthlyType === 'week'
+              ? yup.number().integer().min(1).max(7).required()
+              : yup.mixed(),
           endType: yup.string().oneOf(['date', 'occ']).required(),
           end_times:
             values.recurrence.endType === 'occ' ? yup.number().oneOf(recurrenceOcurrs).required() : yup.mixed(),

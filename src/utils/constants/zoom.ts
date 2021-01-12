@@ -7,20 +7,28 @@ export const recurrenceTypes = {
 } as const;
 
 /** Interval options for each recurrence type */
-export const recurrenceIntervals = {
-  1: range(90),
-  2: range(12),
-  3: range(3),
-} as Record<keyof typeof recurrenceTypes, number[]>;
+export const recurrenceMaxIntervals = {
+  1: 90,
+  2: 12,
+  3: 3,
+} as Record<keyof typeof recurrenceTypes, number>;
 
-export const recurrenceOcurrs = range(50);
+export const recurrenceOcurrs = range(1, 50);
 
-export const recurrenceWeeks = {
-  1: 'Sun',
-  2: 'Mon',
-  3: 'Tue',
-  4: 'Wed',
-  5: 'Thu',
-  6: 'Fri',
-  7: 'Sat',
+export const recurrenceWeekDays = {
+  1: { short: 'Sun', long: 'Sunday' },
+  2: { short: 'Mon', long: 'Monday' },
+  3: { short: 'Tue', long: 'Tuesday' },
+  4: { short: 'Wed', long: 'Wednesday' },
+  5: { short: 'Thu', long: 'Thursday' },
+  6: { short: 'Fri', long: 'Friday' },
+  7: { short: 'Sat', long: 'Saturday' },
+};
+
+export const recurrenceMonthlyWeeks = {
+  '-1': 'Last',
+  1: 'First',
+  2: 'Second',
+  3: 'Third',
+  4: 'Forth',
 };
