@@ -138,7 +138,7 @@ export const SchedulePage = () => {
                       onBlur={formik.handleBlur}
                       error={hasError('hours')}
                     >
-                      {range(1, 25).map(num => (
+                      {range(0, 24).map(num => (
                         <MenuItem key={num} value={num}>
                           {num}
                         </MenuItem>
