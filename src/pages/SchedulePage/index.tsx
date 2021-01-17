@@ -1,10 +1,18 @@
 import { Page } from 'components/Page';
 import { addMinutes, addMonths } from 'date-fns';
 import { Values, ZoomInputs } from 'components/ZoomInputs';
+import { createMeeting, formatRequest } from 'utils/zoomer';
 
 export const SchedulePage = () => {
-  const handleSubmit = (values: Values) => {
-    console.log({ values });
+  const handleSubmit = async (values: Values) => {
+    //console.log({ values, formatedValues: formatRequest(values) });
+    const [err, obj] = await createMeeting(formatRequest(values));
+    console.log({ err, obj });
+    if (err) {
+      alert('Error...');
+    } else {
+      alert('Meeting Created...');
+    }
   };
 
   return (
