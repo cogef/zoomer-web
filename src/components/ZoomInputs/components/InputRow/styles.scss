@@ -1,0 +1,10 @@
+.input-row {
+  &:not(:last-child) {
+    margin-bottom: 20px;
+  }
+
+  .label {
+    font-weight: bold;
+    opacity: 0.8;
+  }
+}

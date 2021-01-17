@@ -1,0 +1,23 @@
+.zoom-inputs {
+  .select-control {
+    margin: 0;
+    margin-right: 3px;
+    justify-content: center; // for flex column container
+
+    .form-control-select {
+      margin-right: 5px;
+    }
+  }
+  .inline {
+    margin-right: 20px;
+    justify-content: center; // for flex column container
+
+    .form-control-label {
+      margin: 0;
+    }
+  }
+}
+/* popup menu with select options */
+.select-menu {
+  //max-height: 200px !important;
+}

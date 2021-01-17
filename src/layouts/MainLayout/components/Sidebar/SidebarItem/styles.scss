@@ -1,0 +1,16 @@
+.sidebar-item {
+  padding: 10px 30px;
+
+  &:hover {
+    background-color: #426f9485;
+  }
+
+  &.active {
+    background-color: #104673;
+  }
+
+  a {
+    color: white;
+    text-decoration: none;
+  }
+}

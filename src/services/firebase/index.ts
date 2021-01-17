@@ -2,13 +2,13 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyD1eCO6kk6eLGqNssnwSukt_sIVYKNPEE4',
-  authDomain: 'zoomer-300722.firebaseapp.com',
-  projectId: 'zoomer-300722',
-  storageBucket: 'zoomer-300722.appspot.com',
-  messagingSenderId: '237676702185',
-  appId: '1:237676702185:web:66fade21207fac81de4378',
-  measurementId: 'G-MBSJ8WP7F3',
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
 const app = firebase.initializeApp(firebaseConfig);
