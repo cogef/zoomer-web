@@ -1,14 +1,14 @@
 export type MeetingRequest = {
   topic: string;
-  type: 2 | 8; // 1 | 2 | 3 | 8;
+  type: 2 | 8; // 1 | 2 (scheduled) | 3 | 8 (recurring);
   start_time: string; // [date-time];
-  duration: number;
+  duration: number; // in mins
   schedule_for?: never; // string;
-  timezone: string;
+  timezone?: string;
   password: string;
-  agenda: string;
+  agenda: string; // description
   recurrence?: {
-    type: number;
+    type: 1 | 2 | 3;
     repeat_interval: number;
     weekly_days?: string;
     monthly_day?: number;
@@ -20,20 +20,20 @@ export type MeetingRequest = {
   settings: {
     host_video: boolean;
     participant_video: boolean;
-    cn_meeting: boolean;
-    in_meeting: boolean;
+    cn_meeting?: never; // boolean;
+    in_meeting?: never; // boolean;
     join_before_host: boolean;
     mute_upon_entry: boolean;
-    watermark: boolean;
-    use_pmi: boolean;
-    approval_type: number;
-    registration_type: number;
-    audio?: never; //'both' | 'telephony' | 'voip';
+    watermark?: never; // boolean;
+    use_pmi?: never; // boolean;
+    approval_type?: never; // 0 | 1 | 2 (default, no registration);
+    registration_type?: never; // 1  | 2 | 3;
+    audio?: never; //'both' (default) | 'telephony' | 'voip';
     auto_recording?: 'local'; //'local' | 'cloud' | 'none';
-    enforce_login: boolean;
-    enforce_login_domains: string;
-    alternative_hosts: string;
-    global_dial_in_countries?: string[];
-    registrants_email_notification: boolean;
+    enforce_login?: never; // boolean;
+    enforce_login_domains?: never; // string;
+    alternative_hosts?: never; // string;
+    global_dial_in_countries?: never; //string[];
+    registrants_email_notification?: never; // boolean;
   };
 };
