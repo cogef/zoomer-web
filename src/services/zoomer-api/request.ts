@@ -1,24 +1,24 @@
 import { auth } from 'services/firebase';
 
-export const zoomerRequest = async (options: RequestProps) => {
+export const zoomerRequest = async (options: RequestProps): Promise<Response> => {
   const jwt = (await auth.currentUser?.getIdToken(true)) || '';
   if (!jwt) {
     console.error('JWT not generated');
   }
 
-  const res = await fetch(`https://api.cogef.org/zoomer/${options.path || ''}`, {
+  const res = await fetch(`https://api.cogef.org/zoomer${options.path || ''}`, {
     headers: {
       authorization: `Bearer ${jwt}`,
     },
     method: options.method,
     body: options.body ? JSON.stringify(options.body) : undefined,
-  })
-    .then(async res => [null, (await res.json()) as Object] as const)
-    .catch((err: Error) => {
-      console.error(err);
-      return [err, null] as const;
-    });
-  return res;
+  });
+  const status = res.status;
+  const body = await res.json();
+  if (status >= 400) {
+    return [body.error, null];
+  }
+  return [null, body];
 };
 
 type RequestProps = {
@@ -27,3 +27,5 @@ type RequestProps = {
   path?: string;
   body?: Object;
 };
+
+type Response = [ErrorMsg: string, Data: null] | [ErrorMsg: null, Data: any];

@@ -1,4 +1,9 @@
 export type MeetingRequest = {
+  ministry: string; // cogef ministry,
+  host: {
+    name: string;
+    email: string;
+  };
   topic: string;
   type: 2 | 8; // 1 | 2 (scheduled) | 3 | 8 (recurring);
   start_time: string; // [date-time];

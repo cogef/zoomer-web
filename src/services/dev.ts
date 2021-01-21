@@ -11,7 +11,7 @@ dev.api = {};
 
 dev.api.sendPost = () => {
   return zoomerRequest({
-    path: 'meetings',
+    path: '/meetings',
     method: 'post',
     body: {
       a: 1,
@@ -23,6 +23,6 @@ dev.api.sendPost = () => {
 
 dev.api.sendGet = () => {
   return zoomerRequest({
-    path: 'meetings/123',
+    path: '/meetings/123',
   });
 };
