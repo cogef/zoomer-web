@@ -1,12 +1,18 @@
 import { Values } from 'components/ZoomInputs';
+import { auth } from 'services/firebase';
 import { MeetingRequest } from 'services/zoomer-api';
 
 export const formatRequest = (values: Values) => {
   const req: MeetingRequest = {
+    ministry: values.ministry,
+    host: {
+      name: auth.currentUser?.displayName || '',
+      email: auth.currentUser?.email || '',
+    },
     topic: values.topic,
     type: values.isRecurring ? 8 : 2,
     start_time: values.start_time.toISOString(),
-    duration: formatDuration(values.duration),
+    duration: values.duration.hours * 60 + values.duration.minutes,
     password: values.passcode,
     agenda: values.agenda,
     recurrence: values.isRecurring ? formatRecurrence(values.recurrence) : undefined,
@@ -19,10 +25,6 @@ export const formatRequest = (values: Values) => {
     },
   };
   return req;
-};
-
-const formatDuration = (dur: Values['duration']) => {
-  return dur.hours * 60 + dur.minutes;
 };
 
 const formatRecurrence = (recurr: Values['recurrence']) => {

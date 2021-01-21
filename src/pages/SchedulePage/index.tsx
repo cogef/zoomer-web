@@ -6,12 +6,14 @@ import { createMeeting, formatRequest } from 'utils/zoomer';
 export const SchedulePage = () => {
   const handleSubmit = async (values: Values) => {
     //console.log({ values, formatedValues: formatRequest(values) });
-    const [err, obj] = await createMeeting(formatRequest(values));
-    console.log({ err, obj });
+    const vals = formatRequest(values);
+    console.log({ vals });
+    const [err, res] = await createMeeting(vals);
+    console.log({ err, res });
     if (err) {
-      alert('Error...');
+      alert(`Error: ${err}`);
     } else {
-      alert('Meeting Created...');
+      alert(`Meeting Created with ID "${res.meetingID}`);
     }
   };
 

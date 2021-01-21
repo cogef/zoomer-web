@@ -34,7 +34,10 @@ export const ZoomInputs = (props: Props) => {
   const formik = useFormik({
     initialValues: props.initialValues,
     validationSchema: () => yup.lazy(values => getSchema(values)),
-    onSubmit: props.onSubmit,
+    onSubmit: async (values, { setSubmitting }) => {
+      await props.onSubmit(values);
+      setSubmitting(false);
+    },
   });
 
   const hasError = (name: Value) => {
@@ -514,7 +517,7 @@ export const ZoomInputs = (props: Props) => {
             </InputRow>
           </Section>
 
-          <Button variant='contained' color='primary' type='submit'>
+          <Button variant='contained' color='primary' type='submit' disabled={formik.isSubmitting}>
             Schedule
           </Button>
         </form>

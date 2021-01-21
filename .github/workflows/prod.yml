@@ -31,7 +31,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          GENERATE_SOURCEMAP: ${{ secrets.GENERATE_SOURCEMAP }}
+          GENERATE_SOURCEMAP: false
           REACT_APP_APP_NAME: ${{ secrets.REACT_APP_APP_NAME }}
           REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
           REACT_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.REACT_APP_FIREBASE_AUTH_DOMAIN }}
