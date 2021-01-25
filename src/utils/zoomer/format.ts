@@ -22,6 +22,7 @@ export const formatRequest = (values: Values) => {
       join_before_host: values.settings.join_before_host,
       mute_upon_entry: values.settings.mute_upon_entry,
       auto_recording: values.settings.auto_recording ? 'local' : undefined,
+      waiting_room: values.settings.waiting_room,
     },
   };
   return req;
