@@ -1,6 +1,6 @@
 import { Page } from 'components/Page';
-import { useRef, useState } from 'react';
-import { MeetingRequest, Meeting } from 'services/zoomer-api';
+import { useState } from 'react';
+import { Meeting } from 'services/zoomer-api';
 import { deleteMeeting, getMeeting } from 'utils/zoomer';
 import { IDInput, IDValues } from './components/IDInput';
 
