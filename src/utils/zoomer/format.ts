@@ -1,14 +1,9 @@
 import { Values } from 'components/ZoomInputs';
-import { auth } from 'services/firebase';
 import { MeetingRequest } from 'services/zoomer-api';
 
 export const formatRequest = (values: Values) => {
   const req: MeetingRequest = {
     ministry: values.ministry,
-    host: {
-      name: auth.currentUser?.displayName || '',
-      email: auth.currentUser?.email || '',
-    },
     topic: values.topic,
     type: values.isRecurring ? 8 : 2,
     start_time: values.start_time.toISOString(),

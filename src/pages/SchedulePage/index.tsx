@@ -8,12 +8,12 @@ export const SchedulePage = () => {
     //console.log({ values, formatedValues: formatRequest(values) });
     const vals = formatRequest(values);
     console.log({ vals });
-    const [err, res] = await createMeeting(vals);
-    console.log({ err, res });
+    const { err, data } = await createMeeting(vals);
+    console.log({ err, res: data });
     if (err) {
       alert(`Error: ${err}`);
     } else {
-      alert(`Meeting Created with ID "${res.meetingID}`);
+      alert(`Meeting Created with ID "${data.meetingID} :: Host Key: ${data.hostKey}`);
     }
   };
 
