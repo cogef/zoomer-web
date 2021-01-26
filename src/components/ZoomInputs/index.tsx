@@ -549,7 +549,7 @@ export type Values = {
     weekly_days: [boolean, boolean, boolean, boolean, boolean, boolean, boolean];
     monthlyType: 'day' | 'week';
     monthly_day: number;
-    monthly_week: number;
+    monthly_week: '-1' | 1 | 2 | 3 | 4;
     monthly_week_day: number;
     endType: 'date' | 'occ';
     end_times: number;

@@ -1,9 +1,5 @@
 export type MeetingRequest = {
-  ministry: string; // cogef ministry,
-  host: {
-    name: string;
-    email: string;
-  };
+  ministry: string;
   topic: string;
   type: 2 | 8; // 1 | 2 (scheduled) | 3 | 8 (recurring);
   start_time: string; // [date-time];
@@ -13,11 +9,11 @@ export type MeetingRequest = {
   password: string;
   agenda: string; // description
   recurrence?: {
-    type: 1 | 2 | 3;
+    type: 1 | 2 | 3; // 1 (daily) | 2 (weekly) | 3 (monthly)
     repeat_interval: number;
     weekly_days?: string;
     monthly_day?: number;
-    monthly_week?: number;
+    monthly_week?: '-1' | 1 | 2 | 3 | 4;
     monthly_week_day?: number;
     end_times?: number;
     end_date_time?: string; //  [date-time];
@@ -43,3 +39,14 @@ export type MeetingRequest = {
     registrants_email_notification?: never; // boolean;
   };
 };
+
+export type Meeting = {
+  uuid: string;
+  id: number;
+  host_id: string;
+  assistant_id?: string;
+  host_email: string;
+  created_at: string;
+  start_url: string;
+  join_url: string;
+} & MeetingRequest;

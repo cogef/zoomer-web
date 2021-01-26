@@ -13,12 +13,13 @@ export const zoomerRequest = async (options: RequestProps): Promise<Response> =>
     method: options.method,
     body: options.body ? JSON.stringify(options.body) : undefined,
   });
+  console.log({ res });
   const status = res.status;
-  const body = await res.json();
+  const body = status === 204 ? null : await res.json();
   if (status >= 400) {
-    return [body.error, null];
+    return { err: body.error || res.statusText, status, data: null };
   }
-  return [null, body];
+  return { err: null, status, data: body };
 };
 
 type RequestProps = {
@@ -28,4 +29,4 @@ type RequestProps = {
   body?: Object;
 };
 
-type Response = [ErrorMsg: string, Data: null] | [ErrorMsg: null, Data: any];
+type Response = { err: string; status: number; data: null } | { err: null; status: number; data: any };
