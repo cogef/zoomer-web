@@ -3,12 +3,18 @@
 }
 
 .sidebar {
+  background-color: #323232;
+  z-index: 900;
   position: fixed;
   top: var(--topbar-height);
-  left: 0;
+  left: calc(-1 * var(--sidebar-width));
   bottom: 0;
   width: var(--sidebar-width);
-  background-color: #323232;
+  transition: left 1s;
+
+  &.open {
+    left: 0;
+  }
 
   .separator {
     height: 20px;

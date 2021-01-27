@@ -4,6 +4,7 @@ export const zoomerRequest = async (options: RequestProps): Promise<Response> =>
   const jwt = (await auth.currentUser?.getIdToken(true)) || '';
   if (!jwt) {
     console.error('JWT not generated');
+    throw new Error('JWT not generated');
   }
 
   const res = await fetch(`https://api.cogef.org/zoomer${options.path || ''}`, {
