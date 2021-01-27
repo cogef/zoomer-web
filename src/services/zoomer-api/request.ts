@@ -9,6 +9,7 @@ export const zoomerRequest = async (options: RequestProps): Promise<Response> =>
   const res = await fetch(`https://api.cogef.org/zoomer${options.path || ''}`, {
     headers: {
       authorization: `Bearer ${jwt}`,
+      'Content-Type': 'application/json',
     },
     method: options.method,
     body: options.body ? JSON.stringify(options.body) : undefined,
