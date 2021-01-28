@@ -1,7 +1,7 @@
+import { AppLayout } from 'layouts';
 import { ManagePage } from 'pages/ManagePage';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { PrivateRoute } from '../components/PrivateRoute';
-import { MainLayout } from '../layouts/MainLayout';
 import { LoginPage } from '../pages/LoginPage';
 import { SchedulePage } from '../pages/SchedulePage';
 
@@ -16,7 +16,7 @@ export const RootRoute = () => (
 );
 
 const PageRoute = () => (
-  <MainLayout>
+  <AppLayout>
     <Switch>
       <Redirect exact from={routes.HOME} to={routes.SCHEDULE} />
 
@@ -30,7 +30,7 @@ const PageRoute = () => (
 
       <Redirect to={routes.NOT_FOUND} />
     </Switch>
-  </MainLayout>
+  </AppLayout>
 );
 
 export const routes = {

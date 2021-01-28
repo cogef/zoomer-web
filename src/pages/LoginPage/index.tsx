@@ -2,7 +2,7 @@ import './styles.scss';
 import { Button, Paper, Typography } from '@material-ui/core';
 import { login, useAuth } from '../../utils/auth';
 import { Redirect } from 'react-router-dom';
-import { Topbar } from 'layouts/MainLayout/components/Topbar';
+import { Topbar } from 'layouts/components/Topbar';
 
 export const LoginPage = () => {
   const [user] = useAuth();

@@ -1,5 +1,5 @@
 import { CircularProgress, Typography } from '@material-ui/core';
-import { Topbar } from '../../layouts/MainLayout/components/Topbar';
+import { Topbar } from '../../layouts/components/Topbar';
 import './styles.scss';
 
 export const LoadingScreen = () => {
