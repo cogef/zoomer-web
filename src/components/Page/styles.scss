@@ -1,4 +1,8 @@
 .page {
+  padding: 20px;
+  min-height: calc(100vh - var(--topbar-height));
+  background-color: #eee;
+
   & &__title {
     margin-bottom: 20px;
     font-weight: bold;
