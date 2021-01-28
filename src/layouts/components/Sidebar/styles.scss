@@ -21,7 +21,12 @@
   }
 
   .separator {
-    height: 20px;
-    background-color: #9e9e9ea9;
+    height: 2px;
+    background-color: #eeeeee;
+    width: 75%;
+    position: relative;
+    left: 11%;
+    margin-bottom: 20px;
+    margin-top: 5px;
   }
 }
