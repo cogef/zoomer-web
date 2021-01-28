@@ -19,7 +19,7 @@ export const Topbar = (props: Props) => {
       </div>
       <div className='topbar__right'>
         {user && (
-          <Button size='small' onClick={logout} variant='contained'>
+          <Button size={props.small ? 'small' : 'medium'} onClick={logout} variant='contained'>
             <Icon>logout</Icon>
             {props.small ? '' : 'Logout'}
           </Button>

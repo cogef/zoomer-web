@@ -10,7 +10,11 @@
   left: calc(-1 * var(--sidebar-width));
   bottom: 0;
   width: var(--sidebar-width);
-  transition: left 1s;
+  transition: left 0.8s;
+  background-image: url('../../../assets/img/connected-dots.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position-x: center;
 
   &.open {
     left: 0;
@@ -18,6 +22,6 @@
 
   .separator {
     height: 20px;
-    background-color: #9e9e9e;
+    background-color: #9e9e9ea9;
   }
 }

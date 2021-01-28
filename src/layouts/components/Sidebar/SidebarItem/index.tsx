@@ -11,7 +11,7 @@ export const SidebarItem = (props: Props) => {
   return (
     <div className={`sidebar-item ${activeClass}`}>
       <Link to={props.path}>
-        <Typography>{props.children}</Typography>
+        <Typography className='type'>{props.children}</Typography>
       </Link>
     </div>
   );
