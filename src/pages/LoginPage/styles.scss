@@ -4,9 +4,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
 
   .login-card {
     padding: 20px;
     margin-top: -80px;
+
+    .heading {
+      margin-bottom: 10px;
+    }
   }
 }

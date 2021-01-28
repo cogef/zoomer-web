@@ -1,4 +1,5 @@
 import { AppLayout } from 'layouts';
+import { HostJoinPage } from 'pages/HostJoinPage';
 import { ManagePage } from 'pages/ManagePage';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { PrivateRoute } from '../components/PrivateRoute';
@@ -8,9 +9,15 @@ import { SchedulePage } from '../pages/SchedulePage';
 export const RootRoute = () => (
   <Switch>
     <Route path={routes.NOT_FOUND}>Not Found</Route>
+
     <Route path={routes.LOGIN}>
       <LoginPage />
     </Route>
+
+    <Route exact path={routes.HOST_JOIN}>
+      <HostJoinPage />
+    </Route>
+
     <PageRoute />
   </Switch>
 );
@@ -39,4 +46,5 @@ export const routes = {
   NOT_FOUND: '/404',
   SCHEDULE: '/schedule',
   MANAGE: '/manage',
+  HOST_JOIN: '/host-join',
 };
