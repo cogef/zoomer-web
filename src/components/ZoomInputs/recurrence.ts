@@ -1,5 +1,5 @@
 import { MeetingRequest } from 'services/zoomer-api';
-import { formatRecurrence, formatRequest } from 'utils/zoomer';
+import { formatRecurrence } from 'utils/zoomer';
 import { Values } from '.';
 
 /**

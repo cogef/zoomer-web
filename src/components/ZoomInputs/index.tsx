@@ -46,8 +46,7 @@ export const ZoomInputs = (props: Props) => {
 
   //TODO: Calculate last date for 50 occurrences
   const maxReccurDate = useMemo(() => {
-    const { recurrence, start_time } = formik.values;
-    return getMaxReccurDate(start_time, recurrence);
+    return getMaxReccurDate(formik.values.start_time, formik.values.recurrence);
   }, [formik.values.start_time, formik.values.recurrence]);
 
   const hasError = (name: Value) => {
@@ -590,7 +589,6 @@ export type Values = {
 type Value = keyof Values;
 
 const getMaxReccurDate = (startDate: Values['start_time'], reccurrence: Values['recurrence']) => {
-  console.log('recomputing');
   const r = reccurrence;
   const weekly_days = [...r.weekly_days] as typeof r.weekly_days;
   // if no day chosen
