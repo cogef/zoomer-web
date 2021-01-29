@@ -5,7 +5,6 @@ import { createMeeting, formatRequest } from 'utils/zoomer';
 
 export const SchedulePage = () => {
   const handleSubmit = async (values: Values) => {
-    //console.log({ values, formatedValues: formatRequest(values) });
     const vals = formatRequest(values);
     console.log({ vals });
     const { err, data } = await createMeeting(vals);
@@ -46,7 +45,7 @@ const initialValues: Values = {
     monthly_week_day: 1,
     endType: 'date',
     end_times: 7,
-    end_date_time: addMonths(minDate(), 3),
+    end_date_time: addMonths(minDate(), 1),
   },
   passcode: '',
   settings: {
