@@ -1,44 +1,53 @@
-import './styles.scss';
+import DateFnsUtils from '@date-io/date-fns';
 import {
   Button,
   Checkbox,
   FormControl,
   FormControlLabel,
   FormGroup,
+  FormHelperText,
   MenuItem,
   Radio,
   RadioGroup,
   Select,
   TextField,
 } from '@material-ui/core';
-import { InputRow } from '../../components/ZoomInputs/components/InputRow';
-import { Section } from '../../components/ZoomInputs/components/Section';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import 'date-fns';
-import DateFnsUtils from '@date-io/date-fns';
-import { addMinutes } from 'date-fns';
 import { KeyboardDatePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { InputSubRow } from '../../components/ZoomInputs/components/InputSubRow';
+import 'date-fns';
+import { addMinutes } from 'date-fns';
+import { useFormik } from 'formik';
+import { useMemo } from 'react';
 import {
+  ministries,
   recurrenceMaxIntervals,
+  recurrenceMonthlyWeeks,
   recurrenceOcurrs,
   recurrenceTypes,
-  ministries,
   recurrenceWeekDays,
-  recurrenceMonthlyWeeks,
 } from 'utils/constants';
-import { formatSingularity, entriesOf, getDotNotationProp, keysOf, range } from 'utils/functions';
+import { entriesOf, formatSingularity, getDotNotationProp, keysOf, range } from 'utils/functions';
+import * as yup from 'yup';
+import { InputRow } from '../../components/ZoomInputs/components/InputRow';
+import { InputSubRow } from '../../components/ZoomInputs/components/InputSubRow';
+import { Section } from '../../components/ZoomInputs/components/Section';
+import { zoomToRFCRecurrence } from './recurrence';
+import { rrulestr } from 'rrule';
+import './styles.scss';
 
 export const ZoomInputs = (props: Props) => {
   const formik = useFormik({
     initialValues: props.initialValues,
-    validationSchema: () => yup.lazy(values => getSchema(values)),
+    validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       await props.onSubmit(values);
       setSubmitting(false);
     },
   });
+
+  //TODO: Calculate last date for 50 occurrences
+  const maxReccurDate = useMemo(() => {
+    return getMaxReccurDate(formik.values.start_time, formik.values.recurrence);
+  }, [formik.values.start_time, formik.values.recurrence]);
 
   const hasError = (name: Value) => {
     return Boolean(getDotNotationProp(name, formik.touched) && getDotNotationProp(name, formik.errors));
@@ -47,6 +56,12 @@ export const ZoomInputs = (props: Props) => {
   const getHelperText = (name: Value) => {
     return getDotNotationProp(name, formik.touched) && getDotNotationProp(name, formik.errors);
   };
+
+  const HelperText = (props: { name: Value }) => (
+    <FormHelperText variant='outlined' error={true}>
+      {getHelperText(props.name)}
+    </FormHelperText>
+  );
 
   return (
     <div className='zoom-inputs'>
@@ -100,6 +115,7 @@ export const ZoomInputs = (props: Props) => {
                     </MenuItem>
                   ))}
                 </Select>
+                <HelperText name='ministry' />
               </FormControl>
             </InputRow>
           </Section>
@@ -211,23 +227,26 @@ export const ZoomInputs = (props: Props) => {
                       )}
                       className='form-control-label'
                       control={
-                        <Select
-                          className='form-control-select'
-                          variant='outlined'
-                          name='recurrence.repeat_interval'
-                          value={formik.values.recurrence.repeat_interval}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          error={hasError('recurrence.repeat_interval' as any)}
-                        >
-                          {range(1, recurrenceMaxIntervals[formik.values.recurrence.type]).map(interval => (
-                            <MenuItem key={interval} value={interval}>
-                              {interval}
-                            </MenuItem>
-                          ))}
-                        </Select>
+                        <>
+                          <Select
+                            className='form-control-select'
+                            variant='outlined'
+                            name='recurrence.repeat_interval'
+                            value={formik.values.recurrence.repeat_interval}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={hasError('recurrence.repeat_interval' as any)}
+                          >
+                            {range(1, recurrenceMaxIntervals[formik.values.recurrence.type]).map(interval => (
+                              <MenuItem key={interval} value={interval}>
+                                {interval}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </>
                       }
                     />
+                    <HelperText name={'recurrence.repeat_interval' as Value} />
                   </FormControl>
                 </InputSubRow>
                 {formik.values.recurrence.type === 2 && (
@@ -360,7 +379,8 @@ export const ZoomInputs = (props: Props) => {
                           variant='inline'
                           format='MM/dd/yyyy'
                           margin='dense'
-                          minDate={minDate()}
+                          minDate={formik.values.start_time}
+                          maxDate={maxReccurDate}
                           name='recurrence.end_date_time'
                           value={formik.values.recurrence.end_date_time}
                           onChange={value => formik.setFieldValue('recurrence.end_date_time', value)}
@@ -568,61 +588,83 @@ export type Values = {
 
 type Value = keyof Values;
 
+const getMaxReccurDate = (startDate: Values['start_time'], reccurrence: Values['recurrence']) => {
+  const r = reccurrence;
+  const weekly_days = [...r.weekly_days] as typeof r.weekly_days;
+  // if no day chosen
+  if (weekly_days.every(d => !d)) {
+    const startDay = startDate.getDay();
+    weekly_days[startDay] = true;
+  }
+  const maxReccurrence: Values['recurrence'] = { ...r, weekly_days, endType: 'occ', end_times: 50 };
+  const rrule = zoomToRFCRecurrence(maxReccurrence, startDate.toISOString());
+  const dates = rrulestr(rrule).all();
+  return dates[dates.length - 1];
+};
+
 const durMinutes = [0, 15, 30, 45];
 
-const getSchema = (values: Values) =>
-  yup.object({
-    topic: yup.string().required(),
-    agenda: yup.string().max(1800, 'Must be 1800 characters or less'),
-    ministry: yup
-      .string()
-      .oneOf(ministries.map(m => m[0]))
-      .required(),
-    start_time: yup
-      .date()
-      .min(minDate(), 'date must be at least 15 minutes in the future')
-      .typeError('invalid date')
-      .required(),
-    duration: yup
-      .object({
-        hours: yup.number().integer().min(0).max(24).required(),
-        minutes: yup.number().oneOf(durMinutes).required(),
-      })
-      .required(),
-    isRecurring: yup.boolean().required(),
-    recurrence: values.isRecurring
-      ? yup.object({
-          type: yup.number().oneOf(keysOf(recurrenceTypes).map(Number)).required(),
-          repeat_interval: yup.number().integer().min(1).max(recurrenceMaxIntervals[values.recurrence.type]).required(),
-          weekly_days: values.recurrence.type === 2 ? yup.array().of(yup.bool()).required() : yup.mixed(),
-          monthly_day:
-            values.recurrence.type === 3 && values.recurrence.monthlyType === 'day'
-              ? yup.number().integer().min(1).max(31).required()
-              : yup.mixed(),
-          monthly_week:
-            values.recurrence.type === 3 && values.recurrence.monthlyType === 'week'
-              ? yup.number().oneOf(keysOf(recurrenceMonthlyWeeks).map(Number)).required()
-              : yup.mixed(),
-          monthly_week_day:
-            values.recurrence.type === 3 && values.recurrence.monthlyType === 'week'
-              ? yup.number().integer().min(1).max(7).required()
-              : yup.mixed(),
-          endType: yup.string().oneOf(['date', 'occ']).required(),
-          end_times:
-            values.recurrence.endType === 'occ' ? yup.number().oneOf(recurrenceOcurrs).required() : yup.mixed(),
-          end_date_time:
-            values.recurrence.endType === 'date'
-              ? yup.date().min(minDate(), 'date must be in the future').typeError('invalid date').required()
-              : yup.mixed(),
+const validationSchema = () =>
+  yup.lazy((values: Values) =>
+    yup.object({
+      topic: yup.string().required(),
+      agenda: yup.string().max(1800, 'Must be 1800 characters or less'),
+      ministry: yup
+        .string()
+        .oneOf(ministries.map(m => m[0]))
+        .required(),
+      start_time: yup.date().typeError('invalid date').required(),
+      duration: yup
+        .object({
+          hours: yup.number().integer().min(0).max(24).required(),
+          minutes: yup.number().oneOf(durMinutes).required(),
         })
-      : yup.mixed(),
-    passcode: yup.string().max(10).required(),
-    settings: yup.object({
-      waiting_room: yup.boolean().required(),
-      host_video: yup.bool().required(),
-      participant_video: yup.bool().required(),
-      join_before_host: yup.boolean().required(),
-      mute_upon_entry: yup.boolean().required(),
-      auto_recording: yup.boolean().required(),
-    }),
-  });
+        .required(),
+      isRecurring: yup.boolean().required(),
+      recurrence: values.isRecurring
+        ? yup.object({
+            type: yup.number().oneOf(keysOf(recurrenceTypes).map(Number)).required(),
+            repeat_interval: yup
+              .number()
+              .integer()
+              .min(1)
+              .max(recurrenceMaxIntervals[values.recurrence.type])
+              .required(),
+            weekly_days: values.recurrence.type === 2 ? yup.array().of(yup.bool()).required() : yup.mixed(),
+            monthly_day:
+              values.recurrence.type === 3 && values.recurrence.monthlyType === 'day'
+                ? yup.number().integer().min(1).max(31).required()
+                : yup.mixed(),
+            monthly_week:
+              values.recurrence.type === 3 && values.recurrence.monthlyType === 'week'
+                ? yup.number().oneOf(keysOf(recurrenceMonthlyWeeks).map(Number)).required()
+                : yup.mixed(),
+            monthly_week_day:
+              values.recurrence.type === 3 && values.recurrence.monthlyType === 'week'
+                ? yup.number().integer().min(1).max(7).required()
+                : yup.mixed(),
+            endType: yup.string().oneOf(['date', 'occ']).required(),
+            end_times:
+              values.recurrence.endType === 'occ' ? yup.number().integer().min(1).max(50).required() : yup.mixed(),
+            end_date_time:
+              values.recurrence.endType === 'date'
+                ? yup
+                    .date()
+                    .min(values.start_time, 'end date must be after start date')
+                    .max(getMaxReccurDate(values.start_time, values.recurrence), 'cannot have more than 50 occurrences')
+                    .typeError('invalid date')
+                    .required()
+                : yup.mixed(),
+          })
+        : yup.mixed(),
+      passcode: yup.string().max(10).required(),
+      settings: yup.object({
+        waiting_room: yup.boolean().required(),
+        host_video: yup.bool().required(),
+        participant_video: yup.bool().required(),
+        join_before_host: yup.boolean().required(),
+        mute_upon_entry: yup.boolean().required(),
+        auto_recording: yup.boolean().required(),
+      }),
+    })
+  );

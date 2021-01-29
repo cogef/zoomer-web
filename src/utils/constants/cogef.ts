@@ -1,6 +1,6 @@
 export const ministries = [
   ['cap', 'Communications and Promotions'],
-  ['media', 'MultiMedia'],
+  ['media', 'Media'],
   ['familyLife', 'Family Life'],
   ['chaplains', 'Chaplains'],
   ['children', 'Children'],

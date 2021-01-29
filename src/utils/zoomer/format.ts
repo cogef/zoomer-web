@@ -23,7 +23,7 @@ export const formatRequest = (values: Values) => {
   return req;
 };
 
-const formatRecurrence = (recurr: Values['recurrence']) => {
+export const formatRecurrence = (recurr: Values['recurrence']) => {
   const recurrence: MeetingRequest['recurrence'] = {
     type: recurr.type,
     repeat_interval: recurr.repeat_interval,
