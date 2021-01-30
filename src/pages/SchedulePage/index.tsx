@@ -12,7 +12,7 @@ export const SchedulePage = () => {
     if (err) {
       alert(`Error: ${err}`);
     } else {
-      alert(`Meeting Created with ID "${data.meetingID} :: Host Key: ${data.hostKey}`);
+      alert(`Meeting Created with ID "${data.meetingID} :: Host Key: ${data.hostJoinKey}`);
     }
   };
 
