@@ -9,7 +9,7 @@ export const ManagePage = () => {
 
   const handleIDSubmit = async (values: IDValues) => {
     const res = await getMeeting(values.meetingID.replace(/ +/g, ''));
-    if (res.err) {
+    if (res.err !== null) {
       alert(res.status === 404 ? 'Meeting not found' : res.err);
     } else {
       setMeeting(res.data);

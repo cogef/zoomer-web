@@ -11,8 +11,6 @@ export const useAuth = () => useContext(authContext);
 export const AuthProvider = (props: Props) => {
   const [state, setState] = useState<AuthState>([auth.currentUser, true, null]);
 
-  console.log({ authState: state });
-
   useEffect(() => {
     auth.onAuthStateChanged(
       fbUser => {

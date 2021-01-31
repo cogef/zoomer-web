@@ -7,12 +7,12 @@ export const SchedulePage = () => {
   const handleSubmit = async (values: Values) => {
     const vals = formatRequest(values);
     console.log({ vals });
-    const { err, data } = await createMeeting(vals);
-    console.log({ err, res: data });
-    if (err) {
-      alert(`Error: ${err}`);
+    const res = await createMeeting(vals);
+    console.log({ res });
+    if (res.err !== null) {
+      alert(`Error: ${res.err}`);
     } else {
-      alert(`Meeting Created with ID "${data.meetingID} :: Host Key: ${data.hostJoinKey}`);
+      alert(`Meeting Created with ID "${res.data.meetingID} :: Host Key: ${res.data.hostJoinKey}`);
     }
   };
 
