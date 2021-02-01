@@ -8,6 +8,9 @@ export const useMeetings = () => {
 
 const useResource = <T>(getter: () => Promise<Response<T>>) => {
   const [state, setState] = useState<ResourceState<T>>([null, true, null]);
+  const [toggle, setToggle] = useState<boolean>(true);
+
+  const reload = () => setToggle(t => !t);
 
   useEffect(() => {
     let isMounted = true;
@@ -23,9 +26,9 @@ const useResource = <T>(getter: () => Promise<Response<T>>) => {
     return () => {
       isMounted = false;
     };
-  }, [getter]);
+  }, [getter, toggle]);
 
-  return state;
+  return [...state, reload] as const;
 };
 
 type ResourceState<T> =
