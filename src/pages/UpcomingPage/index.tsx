@@ -1,4 +1,4 @@
-import { CircularProgress } from '@material-ui/core';
+import { LinearProgress } from '@material-ui/core';
 import { Page } from 'components/Page';
 import { format, isThisYear, isToday } from 'date-fns';
 import { entriesOf } from 'utils/functions';
@@ -13,7 +13,7 @@ export const UpcomingPage = () => {
   if (isLoading) {
     return (
       <Page className='manage-page' title='Upcoming Meetings'>
-        <CircularProgress />
+        <LinearProgress />
       </Page>
     );
   }

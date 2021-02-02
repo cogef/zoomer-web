@@ -20,7 +20,8 @@ export const zoomerRequest = async <T>(options: RequestProps): Promise<Response<
   const body = status === 204 ? null : await res.json();
 
   if (status >= 400) {
-    return { err: body.error || res.statusText, status, data: null };
+    console.error({ SERVER_ERROR: body });
+    return { err: body.errorMessage || res.statusText, status, data: null };
   }
   return { err: null, status, data: body };
 };

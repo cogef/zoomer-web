@@ -37,6 +37,7 @@ import './styles.scss';
 export const ZoomInputs = (props: Props) => {
   const formik = useFormik({
     initialValues: props.initialValues,
+    enableReinitialize: true,
     validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       const weekly_days = [...values.recurrence.weekly_days] as typeof values.recurrence.weekly_days;
@@ -546,7 +547,7 @@ export const ZoomInputs = (props: Props) => {
           </Section>
 
           <Button variant='contained' color='primary' type='submit' disabled={formik.isSubmitting}>
-            Schedule
+            {props.action}
           </Button>
         </form>
       </MuiPickersUtilsProvider>
@@ -556,6 +557,7 @@ export const ZoomInputs = (props: Props) => {
 
 type Props = {
   initialValues: Values;
+  action: string;
   onSubmit: (values: Values) => any;
 };
 

@@ -16,15 +16,15 @@ export const DayMeetings = (props: Props) => {
       </Typography>
       {props.meetings.map(meeting => (
         <div key={meeting.occurrenceID} className={styles.meeting}>
-          <Grid container>
+          <Grid container spacing={5}>
             <Grid item xs={6} md={6}>
               <Grid container spacing={2}>
-                <Grid item xs={12} md={4}>
+                <Grid item xs={12} md={6}>
                   <Typography className={styles.top}>{formatDuration(meeting)}</Typography>
                   <Typography className={styles.bottom}>{formatSeq(meeting)}</Typography>
                 </Grid>
 
-                <Grid item xs={12} md={8}>
+                <Grid item xs={12} md={6}>
                   <Typography className={styles.top}>{meeting.title}</Typography>
                   <Typography className={styles.bottom}>{formatID(meeting.meetingID)}</Typography>
                 </Grid>
@@ -33,7 +33,12 @@ export const DayMeetings = (props: Props) => {
 
             <Grid className={styles.options} item xs={6} md={6}>
               <div>
-                <Button className={styles.btn_delete} variant='contained' onClick={handleDelete(meeting.meetingID)}>
+                <Button
+                  className={styles.btn_delete}
+                  size='small'
+                  variant='contained'
+                  onClick={handleDelete(meeting.meetingID)}
+                >
                   Delete
                 </Button>
               </div>
