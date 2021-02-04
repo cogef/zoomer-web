@@ -18,14 +18,22 @@
       }
     }
 
-    .top {
-      font-weight: bold;
-      text-transform: capitalize;
-      margin-bottom: 10px;
-    }
+    .info {
+      max-width: 600px;
 
-    .bottom {
-      font-size: 10pt;
+      .left {
+        max-width: 200px;
+      }
+
+      .top {
+        font-weight: bold;
+        text-transform: capitalize;
+        margin-bottom: 10px;
+      }
+
+      .bottom {
+        font-size: 10pt;
+      }
     }
 
     .options {
@@ -33,9 +41,8 @@
       align-items: center;
     }
 
-    .btn_delete {
-      background-color: rgb(173, 0, 0);
-      color: white;
+    .btn {
+      margin: 0 5px;
     }
   }
 }

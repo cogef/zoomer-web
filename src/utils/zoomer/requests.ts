@@ -1,13 +1,8 @@
 import { Meeting, MeetingRequest, zoomerRequest } from 'services/zoomer-api';
 import { Occurrence } from './types';
 
-//export const testAPI = async () => {
-//  const [, res] = await zoomerRequest({ path: '/meetings/41?hey=hi' });
-//  console.log(res);
-//};
-
 export const createMeeting = (meetingOpts: MeetingRequest) => {
-  return zoomerRequest<CreateResp>({ path: '/meetings', method: 'post', body: meetingOpts });
+  return zoomerRequest<CreateResp>({ path: '/meetings', method: 'POST', body: meetingOpts });
   type CreateResp = {
     hostJoinKey: string;
     meetingID: string;
@@ -18,12 +13,16 @@ export const getMeeting = (meetingID: string) => {
   return zoomerRequest<Meeting>({ path: `/meetings/${meetingID}` });
 };
 
-export const updateMeeting = () => {
-  //TODO:
+export const updateMeeting = (meetingID: string, meetingOpts: MeetingRequest) => {
+  return zoomerRequest<UpdateResp>({ path: `/meetings/${meetingID}`, method: 'PUT', body: meetingOpts });
+  type UpdateResp = {
+    meetingID: string;
+    newMeeting: boolean;
+  };
 };
 
 export const deleteMeeting = (meetingID: string) => {
-  return zoomerRequest({ path: `/meetings/${meetingID}`, method: 'DELETE' });
+  return zoomerRequest<void>({ path: `/meetings/${meetingID}`, method: 'DELETE' });
 };
 
 export const getStartURL = (meetingID: string, hostJoinKey?: string) => {

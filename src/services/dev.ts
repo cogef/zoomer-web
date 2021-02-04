@@ -9,18 +9,6 @@ if (process.env.NODE_ENV === 'development') {
 
 dev.api = {};
 
-dev.api.sendPost = () => {
-  return zoomerRequest({
-    path: '/meetings',
-    method: 'post',
-    body: {
-      a: 1,
-      b: 2,
-      c: 3,
-    },
-  });
-};
-
 dev.api.sendGet = () => {
   return zoomerRequest({
     path: '/meetings/123',

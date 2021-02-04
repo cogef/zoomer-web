@@ -1,14 +1,17 @@
 import { LinearProgress } from '@material-ui/core';
 import { Page } from 'components/Page';
 import { format, isThisYear, isToday } from 'date-fns';
+import { useHistory } from 'react-router-dom';
+import { routes } from 'routes';
 import { entriesOf } from 'utils/functions';
-import { deleteMeeting } from 'utils/zoomer';
+import { deleteMeeting, getStartURL } from 'utils/zoomer';
 import { useMeetings } from 'utils/zoomer/hooks';
 import { Occurrence } from 'utils/zoomer/types';
 import { DayMeetings } from './DayMeetings';
 
 export const UpcomingPage = () => {
   const [meetings, isLoading, err, reloadMeetings] = useMeetings();
+  const history = useHistory();
 
   if (isLoading) {
     return (
@@ -41,6 +44,23 @@ export const UpcomingPage = () => {
     }
   };
 
+  const handleEdit = (id: string) => {
+    history.push(`${routes.MANAGE}?meetingID=${id}`);
+  };
+
+  const handleJoin = async (id: string) => {
+    const res = await getStartURL(id);
+    if (res.status === 404) {
+      alert('Meeting not found');
+    } else if (res.status === 401) {
+      alert('Incorrect host join key');
+    } else if (res.err !== null) {
+      alert('An unknown error has occurred');
+    } else {
+      window.open(res.data.startURL);
+    }
+  };
+
   const dayGroups = meetings!.reduce((acc, meeting) => {
     const date = formatDate(meeting.startDate);
     if (!acc[date]) {
@@ -54,7 +74,14 @@ export const UpcomingPage = () => {
   return (
     <Page className='manage-page' title='Upcoming Meetings'>
       {entriesOf(dayGroups).map(([day, meetings]) => (
-        <DayMeetings key={day} day={day} meetings={meetings} onDelete={handleDelete} />
+        <DayMeetings
+          key={day}
+          day={day}
+          meetings={meetings}
+          onDelete={handleDelete}
+          onEdit={handleEdit}
+          onJoin={handleJoin}
+        />
       ))}
     </Page>
   );

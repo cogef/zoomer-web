@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { routes } from 'routes';
 import { Meeting } from 'services/zoomer-api';
 import { useQuery } from 'utils/hooks';
-import { deleteMeeting, getMeeting, meetingToFormVals } from 'utils/zoomer';
+import { deleteMeeting, formToMeetingRequest, getMeeting, meetingToFormVals, updateMeeting } from 'utils/zoomer';
 import { IDInput, IDValues } from './components/IDInput';
 
 export const ManagePage = () => {
@@ -31,6 +31,7 @@ export const ManagePage = () => {
       getMeeting(qMeetingID).then(res => {
         if (res.err !== null) {
           alert(res.status === 404 ? 'Meeting not found' : res.err);
+          setLoading(false);
         } else {
           if (isMounted) {
             setMeeting(res.data);
@@ -51,7 +52,22 @@ export const ManagePage = () => {
   };
 
   const handleSubmit = async (values: Values) => {
-    console.log({ values });
+    if (meeting) {
+      const meetingReq = formToMeetingRequest(values);
+      const res = await updateMeeting(String(meeting.id), meetingReq);
+      if (res.err !== null) {
+        alert(res.err);
+        return;
+      }
+
+      let msg = 'Update Successful';
+
+      if (res.data.newMeeting) {
+        msg += `\nThere is a new Meeting ID: ${res.data.meetingID}`;
+      }
+
+      alert(msg);
+    }
   };
 
   return (

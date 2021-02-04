@@ -27,7 +27,7 @@ export const zoomerRequest = async <T>(options: RequestProps): Promise<Response<
 };
 
 type RequestProps = {
-  method?: string;
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
   /** Resource path, including any query params */
   path?: string;
   body?: Object;
