@@ -12,7 +12,8 @@ export const HostJoinPage = () => {
     validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       console.log({ values });
-      const res = await getStartURL(values.meetingID, values.hostJoinKey);
+      const meetingID = values.meetingID.replace(/ +/g, '');
+      const res = await getStartURL(meetingID, values.hostJoinKey);
       setSubmitting(false);
       if (res.status === 404) {
         alert('Meeting not found');

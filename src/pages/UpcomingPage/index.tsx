@@ -1,25 +1,34 @@
 import { LinearProgress } from '@material-ui/core';
 import { Page } from 'components/Page';
 import { format, isThisYear, isToday } from 'date-fns';
+import { startOfDay } from 'date-fns/esm';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { routes } from 'routes';
 import { entriesOf } from 'utils/functions';
+import { useDynamicRef, useScrollBottom } from 'utils/hooks';
 import { deleteMeeting, getStartURL } from 'utils/zoomer';
 import { useMeetings } from 'utils/zoomer/hooks';
 import { Occurrence } from 'utils/zoomer/types';
 import { DayMeetings } from './DayMeetings';
 
 export const UpcomingPage = () => {
-  const [meetings, isLoading, err, reloadMeetings] = useMeetings();
   const history = useHistory();
+  const PAGE_SIZE = 20;
+  const [limit, setLimit] = useState(PAGE_SIZE);
+  const [meetings, isLoading, err, reloadMeetings] = useMeetings({
+    limit: limit,
+    start: startOfDay(new Date()).valueOf(),
+  });
 
-  if (isLoading) {
-    return (
-      <Page className='manage-page' title='Upcoming Meetings'>
-        <LinearProgress />
-      </Page>
-    );
-  }
+  const scrollBottom = useScrollBottom();
+
+  const meetingsRef = useDynamicRef(meetings);
+  useEffect(() => {
+    if (scrollBottom <= 200) {
+      setLimit((meetingsRef.current || []).length + PAGE_SIZE);
+    }
+  }, [scrollBottom, meetingsRef]);
 
   if (err !== null) {
     return (
@@ -61,7 +70,7 @@ export const UpcomingPage = () => {
     }
   };
 
-  const dayGroups = meetings!.reduce((acc, meeting) => {
+  const dayGroups = (meetings || []).reduce((acc, meeting) => {
     const date = formatDate(meeting.startDate);
     if (!acc[date]) {
       acc[date] = [];
@@ -83,6 +92,7 @@ export const UpcomingPage = () => {
           onJoin={handleJoin}
         />
       ))}
+      {isLoading && <LinearProgress />}
     </Page>
   );
 };

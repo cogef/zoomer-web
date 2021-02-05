@@ -1,9 +1,14 @@
-import { useEffect, useState } from 'react';
-import { getMeetings } from './requests';
+import { useCallback, useEffect, useState } from 'react';
+import { getMeetings, MeetingsOptions } from './requests';
 import { Response } from '../../services/zoomer-api';
 
-export const useMeetings = () => {
-  return useResource(getMeetings);
+export const useMeetings = (opts: MeetingsOptions) => {
+  const getter = useCallback(
+    () => getMeetings(opts),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [opts.limit, opts.start, opts.end, opts.lastMeetingID, opts.lastOccurrenceID]
+  );
+  return useResource(getter);
 };
 
 const useResource = <T>(getter: () => Promise<Response<T>>) => {
@@ -14,6 +19,7 @@ const useResource = <T>(getter: () => Promise<Response<T>>) => {
 
   useEffect(() => {
     let isMounted = true;
+    setState(s => [s[0], true, null]);
     getter()
       .then(res => {
         if (res.err !== null) {
@@ -34,4 +40,4 @@ const useResource = <T>(getter: () => Promise<Response<T>>) => {
 type ResourceState<T> =
   | [Data: T, IsLoading: false, Error: null]
   | [Data: null, IsLoading: false, Error: string]
-  | [Data: null, IsLoading: true, Error: null];
+  | [Data: T | null, IsLoading: true, Error: null];

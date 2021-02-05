@@ -36,6 +36,15 @@ export const getStartURL = (meetingID: string, hostJoinKey?: string) => {
   type StartURL = { startURL: string };
 };
 
-export const getMeetings = () => {
-  return zoomerRequest<Occurrence[]>({ path: '/meetings?as=occurrences' });
+export const getMeetings = (opts: MeetingsOptions) => {
+  return zoomerRequest<Occurrence[]>({ path: '/meetings', qParams: { as: 'occurrences', ...opts } });
 };
+
+export type MeetingsOptions = {
+  limit: number;
+  start: number;
+  end?: number;
+} & (
+  | { lastOccurrenceID: string | number; lastMeetingID: string | number }
+  | { lastOccurrenceID?: never; lastMeetingID?: never }
+);
