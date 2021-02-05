@@ -37,14 +37,23 @@ import './styles.scss';
 export const ZoomInputs = (props: Props) => {
   const formik = useFormik({
     initialValues: props.initialValues,
+    enableReinitialize: true,
     validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      await props.onSubmit(values);
+      const weekly_days = [...values.recurrence.weekly_days] as typeof values.recurrence.weekly_days;
+      // if no day chosen
+      if (weekly_days.every(d => !d)) {
+        const startDay = values.start_time.getDay();
+        weekly_days[startDay] = true;
+      }
+      const recurrence: Values['recurrence'] = { ...values.recurrence, weekly_days };
+
+      await props.onSubmit({ ...values, recurrence });
       setSubmitting(false);
     },
   });
 
-  //TODO: Calculate last date for 50 occurrences
+  //Calculate last date for 50 occurrences
   const maxReccurDate = useMemo(() => {
     return getMaxReccurDate(formik.values.start_time, formik.values.recurrence);
   }, [formik.values.start_time, formik.values.recurrence]);
@@ -538,7 +547,7 @@ export const ZoomInputs = (props: Props) => {
           </Section>
 
           <Button variant='contained' color='primary' type='submit' disabled={formik.isSubmitting}>
-            Schedule
+            {props.action}
           </Button>
         </form>
       </MuiPickersUtilsProvider>
@@ -548,6 +557,7 @@ export const ZoomInputs = (props: Props) => {
 
 type Props = {
   initialValues: Values;
+  action: string;
   onSubmit: (values: Values) => any;
 };
 

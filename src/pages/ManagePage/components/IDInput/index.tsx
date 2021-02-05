@@ -32,7 +32,6 @@ export const IDInput = (props: Props) => {
         className={classes.btn_delete}
         color='primary'
         variant='contained'
-        type='submit'
         disabled={formik.isSubmitting || !props.meetingID}
         onClick={props.onDelete}
       >

@@ -29,9 +29,7 @@ export const Topbar = (props: Props) => {
   );
 };
 
-type Props =
-  | {
-      small: true;
-      onClick: () => void;
-    }
-  | { small?: false; onClick?: never };
+type Props = {
+  small?: boolean;
+  onClick?: () => void;
+};

@@ -12,15 +12,16 @@ export const HostJoinPage = () => {
     validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       console.log({ values });
-      const { status, data } = await getStartURL(values.meetingID, values.hostJoinKey);
+      const res = await getStartURL(values.meetingID, values.hostJoinKey);
       setSubmitting(false);
-      if (status === 404) {
+      if (res.status === 404) {
         alert('Meeting not found');
-      } else if (status === 401) {
+      } else if (res.status === 401) {
         alert('Incorrect host join key');
+      } else if (res.err !== null) {
+        alert('An unknown error has occurred');
       } else {
-        const { startURL } = data;
-        window.open(startURL);
+        window.open(res.data.startURL);
       }
     },
   });

@@ -1,6 +1,7 @@
 import { AppLayout } from 'layouts';
 import { HostJoinPage } from 'pages/HostJoinPage';
 import { ManagePage } from 'pages/ManagePage';
+import { UpcomingPage } from 'pages/UpcomingPage';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { PrivateRoute } from '../components/PrivateRoute';
 import { LoginPage } from '../pages/LoginPage';
@@ -35,6 +36,10 @@ const PageRoute = () => (
         <ManagePage />
       </PrivateRoute>
 
+      <PrivateRoute exact path={routes.UPCOMING}>
+        <UpcomingPage />
+      </PrivateRoute>
+
       <Redirect to={routes.NOT_FOUND} />
     </Switch>
   </AppLayout>
@@ -44,7 +49,8 @@ export const routes = {
   HOME: '/',
   LOGIN: '/login',
   NOT_FOUND: '/404',
+  HOST_JOIN: '/host-join',
   SCHEDULE: '/schedule',
   MANAGE: '/manage',
-  HOST_JOIN: '/host-join',
+  UPCOMING: '/upcoming',
 };

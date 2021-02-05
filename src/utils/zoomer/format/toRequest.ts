@@ -1,7 +1,8 @@
 import { Values } from 'components/ZoomInputs';
+import { endOfDay } from 'date-fns';
 import { MeetingRequest } from 'services/zoomer-api';
 
-export const formatRequest = (values: Values) => {
+export const formToMeetingRequest = (values: Values) => {
   const req: MeetingRequest = {
     ministry: values.ministry,
     topic: values.topic,
@@ -40,7 +41,7 @@ export const formatRecurrence = (recurr: Values['recurrence']) => {
         }
       : {}),
     end_times: recurr.endType === 'occ' ? recurr.end_times : undefined,
-    end_date_time: recurr.endType === 'date' ? recurr.end_date_time.toISOString() : undefined,
+    end_date_time: recurr.endType === 'date' ? endOfDay(recurr.end_date_time).toISOString() : undefined,
   };
   return recurrence;
 };

@@ -1,6 +1,9 @@
-.layout-main {
+.layout {
   .content {
     margin-top: var(--topbar-height);
     margin-left: var(--sidebar-width);
+  }
+  &.small .content {
+    margin-left: 0;
   }
 }

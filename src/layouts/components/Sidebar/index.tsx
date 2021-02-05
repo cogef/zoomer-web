@@ -11,6 +11,7 @@ export const Sidebar = (props: Props) => {
       <div className='separator' />
       <SidebarItem path='/schedule'>Schedule Meeting</SidebarItem>
       <SidebarItem path='/manage'>Manage Meeting</SidebarItem>
+      <SidebarItem path='/upcoming'>Upcoming Meetings</SidebarItem>
     </div>
   );
 };

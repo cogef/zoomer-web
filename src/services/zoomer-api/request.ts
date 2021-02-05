@@ -1,6 +1,6 @@
 import { auth } from 'services/firebase';
 
-export const zoomerRequest = async (options: RequestProps): Promise<Response> => {
+export const zoomerRequest = async <T>(options: RequestProps): Promise<Response<T>> => {
   const jwt = (await auth.currentUser?.getIdToken(true)) || '';
   if (!jwt) {
     console.error('JWT not generated');
@@ -15,20 +15,22 @@ export const zoomerRequest = async (options: RequestProps): Promise<Response> =>
     method: options.method,
     body: options.body ? JSON.stringify(options.body) : undefined,
   });
-  console.log({ res });
+
   const status = res.status;
   const body = status === 204 ? null : await res.json();
+
   if (status >= 400) {
-    return { err: body.error || res.statusText, status, data: null };
+    console.error({ SERVER_ERROR: body });
+    return { err: body.errorMessage || res.statusText, status, data: null };
   }
   return { err: null, status, data: body };
 };
 
 type RequestProps = {
-  method?: string;
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
   /** Resource path, including any query params */
   path?: string;
   body?: Object;
 };
 
-type Response = { err: string; status: number; data: null } | { err: null; status: number; data: any };
+export type Response<T> = { err: string; status: number; data: null } | { err: null; status: number; data: T };
