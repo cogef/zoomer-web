@@ -3,8 +3,7 @@ import { auth } from 'services/firebase';
 export const zoomerRequest = async <T>(options: RequestProps): Promise<Response<T>> => {
   const jwt = (await auth.currentUser?.getIdToken(true)) || '';
   if (!jwt) {
-    console.error('JWT not generated');
-    throw new Error('JWT not generated');
+    console.log('JWT not generated');
   }
 
   const res = await fetch(`https://api.cogef.org/zoomer${options.path || ''}`, {
@@ -20,7 +19,7 @@ export const zoomerRequest = async <T>(options: RequestProps): Promise<Response<
   const body = status === 204 ? null : await res.json();
 
   if (status >= 400) {
-    console.error({ SERVER_ERROR: body });
+    console.error({ ZOOMER_ERROR: body });
     return { err: body.errorMessage || res.statusText, status, data: null };
   }
   return { err: null, status, data: body };
