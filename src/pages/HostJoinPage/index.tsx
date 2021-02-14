@@ -2,13 +2,19 @@ import { Button, Paper, TextField, Typography } from '@material-ui/core';
 import { useFormik } from 'formik';
 import { Topbar } from 'layouts/components/Topbar';
 import { getDotNotationProp } from 'utils/functions';
+import { useQuery } from 'utils/hooks';
 import { getStartURL } from 'utils/zoomer';
 import * as yup from 'yup';
 import './styles.scss';
 
 export const HostJoinPage = () => {
+  const params = useQuery();
+
+  const meetingID = params.get('meetingID') || initialValues.meetingID;
+  const hostJoinKey = params.get('hostJoinKey') || initialValues.hostJoinKey;
+
   const formik = useFormik({
-    initialValues,
+    initialValues: { meetingID, hostJoinKey },
     validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       console.log({ values });
