@@ -1,12 +1,13 @@
 import { Typography } from '@material-ui/core';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
+import { RoutePath } from 'routes';
 import { ParentProps } from 'utils/propTypes';
 import './styles.scss';
 
 export const SidebarItem = (props: Props) => {
-  const { pathname } = useLocation();
+  const match = useRouteMatch<PathParams>('/:route');
 
-  const activeClass = pathname === props.path ? 'active' : '';
+  const activeClass = props.path === match?.url ? 'active' : '';
 
   return (
     <div className={`sidebar-item ${activeClass}`}>
@@ -18,5 +19,7 @@ export const SidebarItem = (props: Props) => {
 };
 
 type Props = {
-  path: string;
+  path: RoutePath;
 } & ParentProps;
+
+type PathParams = { route: string };

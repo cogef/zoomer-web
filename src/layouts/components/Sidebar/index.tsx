@@ -1,3 +1,4 @@
+import { routes } from 'routes';
 import { SidebarItem } from './SidebarItem';
 import './styles.scss';
 import { UserAccount } from './UserAccount';
@@ -9,9 +10,9 @@ export const Sidebar = (props: Props) => {
     <div className={`sidebar ${openClass}`}>
       <UserAccount />
       <div className='separator' />
-      <SidebarItem path='/schedule'>Schedule Meeting</SidebarItem>
-      <SidebarItem path='/manage'>Manage Meeting</SidebarItem>
-      <SidebarItem path='/upcoming'>Upcoming Meetings</SidebarItem>
+      <SidebarItem path={routes.SCHEDULE}>Schedule Meeting</SidebarItem>
+      <SidebarItem path={routes.MANAGE}>Manage Meeting</SidebarItem>
+      <SidebarItem path={routes.UPCOMING}>Upcoming Meetings</SidebarItem>
     </div>
   );
 };

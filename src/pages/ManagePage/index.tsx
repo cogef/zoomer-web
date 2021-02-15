@@ -2,24 +2,23 @@ import { LinearProgress } from '@material-ui/core';
 import { Page } from 'components/Page';
 import { Values, ZoomInputs } from 'components/ZoomInputs';
 import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { routes } from 'routes';
 import { Meeting } from 'services/zoomer-api';
-import { useQuery } from 'utils/hooks';
 import { deleteMeeting, formToMeetingRequest, getMeeting, meetingToFormVals, updateMeeting } from 'utils/zoomer';
 import { IDInput, IDValues } from './components/IDInput';
 
 export const ManagePage = () => {
   const [meeting, setMeeting] = useState<Meeting>();
   const [isLoading, setLoading] = useState(false);
-  const params = useQuery();
+  const match = useRouteMatch<PathParams>(`${routes.MANAGE}/:meetingID`)!;
   const history = useHistory();
-  const qMeetingID = params.get('meetingID');
+  const qMeetingID = match?.params.meetingID;
 
   const handleIDSubmit = async (values: IDValues) => {
     const id = values.meetingID.replace(/ +/g, '');
     if (id !== qMeetingID) {
-      history.push(routes.MANAGE + `?meetingID=${id}`);
+      history.push(routes.MANAGE + `/${id}/edit`);
     }
   };
 
@@ -73,11 +72,25 @@ export const ManagePage = () => {
   return (
     <Page className='manage-page' title='Manage a Meeting'>
       <IDInput meetingID={meeting?.id} onSubmit={handleIDSubmit} onDelete={handleDelete} />
+      <hr />
       {isLoading ? (
         <LinearProgress />
       ) : (
-        meeting && <ZoomInputs action='Update' initialValues={meetingToFormVals(meeting)} onSubmit={handleSubmit} />
+        meeting && (
+          <Switch>
+            <Redirect exact from={`${routes.MANAGE}/:meetingID`} to={`${routes.MANAGE}/:meetingID/view`} />
+
+            <Route path={`${routes.MANAGE}/:meetingID/view`}>viewing meeting</Route>
+            <Route path={`${routes.MANAGE}/:meetingID/edit`}>
+              <ZoomInputs action='Update' initialValues={meetingToFormVals(meeting)} onSubmit={handleSubmit} />
+            </Route>
+          </Switch>
+        )
       )}
     </Page>
   );
+};
+
+type PathParams = {
+  meetingID: string;
 };

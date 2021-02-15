@@ -19,11 +19,11 @@ export const RootRoute = () => (
       <HostJoinPage />
     </Route>
 
-    <PageRoute />
+    <PageRoutes />
   </Switch>
 );
 
-const PageRoute = () => (
+const PageRoutes = () => (
   <AppLayout>
     <Switch>
       <Redirect exact from={routes.HOME} to={routes.SCHEDULE} />
@@ -32,7 +32,7 @@ const PageRoute = () => (
         <SchedulePage />
       </PrivateRoute>
 
-      <PrivateRoute exact path={routes.MANAGE}>
+      <PrivateRoute path={routes.MANAGE}>
         <ManagePage />
       </PrivateRoute>
 
@@ -53,4 +53,7 @@ export const routes = {
   SCHEDULE: '/schedule',
   MANAGE: '/manage',
   UPCOMING: '/upcoming',
-};
+} as const;
+
+type PageRoute = keyof typeof routes;
+export type RoutePath = typeof routes[PageRoute];
