@@ -1,5 +1,6 @@
 import { Button, Grid, Typography } from '@material-ui/core';
 import { format } from 'date-fns';
+import { formatMeetingID } from 'utils/functions/zoom';
 import { Occurrence } from 'utils/zoomer/types';
 import styles from './styles.module.scss';
 
@@ -21,7 +22,7 @@ export const DayMeetings = (props: Props) => {
 
                 <Grid item xs={12} md={6}>
                   <Typography className={styles.top}>{meeting.title}</Typography>
-                  <Typography className={styles.bottom}>{formatID(meeting.meetingID)}</Typography>
+                  <Typography className={styles.bottom}>Meeting ID: {formatMeetingID(meeting.meetingID)}</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -70,13 +71,6 @@ const formatSeq = (occ: Occurrence) => {
     return '';
   }
   return `Occurrence ${occ.sequence} of ${occ.totalOccurrences}`;
-};
-
-const formatID = (id: string) => {
-  const match = /^(.{3})(.{4})(.+)$/.exec(id);
-  if (!match) return `Meeting ID: ${id}`;
-
-  return `Meeting ID: ${match.slice(1).join(' ')}`;
 };
 
 type Props = {

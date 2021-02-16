@@ -7,6 +7,7 @@ import { routes } from 'routes';
 import { Meeting } from 'services/zoomer-api';
 import { deleteMeeting, formToMeetingRequest, getMeeting, meetingToFormVals, updateMeeting } from 'utils/zoomer';
 import { IDInput, IDValues } from './components/IDInput';
+import { MeetingDetails } from './components/MeetingDetails';
 
 export const ManagePage = () => {
   const [meeting, setMeeting] = useState<Meeting>();
@@ -17,7 +18,7 @@ export const ManagePage = () => {
 
   const handleIDSubmit = async (values: IDValues) => {
     const id = values.meetingID.replace(/ +/g, '');
-    if (id !== qMeetingID) {
+    if (id && id !== qMeetingID) {
       history.push(routes.MANAGE + `/${id}/edit`);
     }
   };
@@ -80,7 +81,9 @@ export const ManagePage = () => {
           <Switch>
             <Redirect exact from={`${routes.MANAGE}/:meetingID`} to={`${routes.MANAGE}/:meetingID/view`} />
 
-            <Route path={`${routes.MANAGE}/:meetingID/view`}>viewing meeting</Route>
+            <Route path={`${routes.MANAGE}/:meetingID/view`}>
+              <MeetingDetails meeting={meeting} />
+            </Route>
             <Route path={`${routes.MANAGE}/:meetingID/edit`}>
               <ZoomInputs action='Update' initialValues={meetingToFormVals(meeting)} onSubmit={handleSubmit} />
             </Route>
