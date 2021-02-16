@@ -29,9 +29,18 @@ export const IDInput = (props: Props) => {
         Find
       </Button>
       <Button
+        className={classes.btn_edit}
+        variant='outlined'
+        color='primary'
+        disabled={formik.isSubmitting || !props.meetingID}
+        onClick={props.onEdit}
+      >
+        Edit
+      </Button>
+      <Button
         className={classes.btn_delete}
         color='primary'
-        variant='contained'
+        variant='outlined'
         disabled={formik.isSubmitting || !props.meetingID}
         onClick={props.onDelete}
       >
@@ -49,6 +58,7 @@ export type IDValues = typeof initialValues;
 
 type Props = {
   onSubmit: (values: IDValues) => Promise<void>;
+  onEdit: () => void;
   onDelete: () => void;
   meetingID: number | undefined;
 };

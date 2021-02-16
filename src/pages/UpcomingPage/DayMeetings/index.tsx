@@ -1,5 +1,8 @@
 import { Button, Grid, Typography } from '@material-ui/core';
 import { format } from 'date-fns';
+import { Link } from 'react-router-dom';
+import { routes } from 'routes';
+import { classes } from 'utils/functions/react';
 import { formatMeetingID } from 'utils/functions/zoom';
 import { Occurrence } from 'utils/zoomer/types';
 import styles from './styles.module.scss';
@@ -21,7 +24,9 @@ export const DayMeetings = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={12} md={6}>
-                  <Typography className={styles.top}>{meeting.title}</Typography>
+                  <Typography className={classes(styles.top, styles.title)}>
+                    {<Link to={`${routes.MANAGE}/${meeting.meetingID}/view`}>{meeting.title}</Link>}
+                  </Typography>
                   <Typography className={styles.bottom}>Meeting ID: {formatMeetingID(meeting.meetingID)}</Typography>
                 </Grid>
               </Grid>

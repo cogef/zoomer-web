@@ -12,6 +12,7 @@ import { MeetingDetails } from './components/MeetingDetails';
 export const ManagePage = () => {
   const [meeting, setMeeting] = useState<Meeting>();
   const [isLoading, setLoading] = useState(false);
+  const [loadToggle, setLoadToggle] = useState(false);
   const match = useRouteMatch<PathParams>(`${routes.MANAGE}/:meetingID`)!;
   const history = useHistory();
   const qMeetingID = match?.params.meetingID;
@@ -44,11 +45,19 @@ export const ManagePage = () => {
     return () => {
       isMounted = false;
     };
-  }, [qMeetingID]);
+  }, [qMeetingID, loadToggle]);
 
   const handleDelete = async () => {
-    await deleteMeeting(String(meeting!.id));
+    if (!meeting) return;
+    setLoading(true);
+    await deleteMeeting(String(meeting.id));
+    setLoading(false);
     setMeeting(undefined);
+  };
+
+  const handleEdit = () => {
+    if (!meeting) return;
+    history.push(routes.MANAGE + `/${meeting.id}/edit`);
   };
 
   const handleSubmit = async (values: Values) => {
@@ -61,18 +70,22 @@ export const ManagePage = () => {
       }
 
       let msg = 'Update Successful';
+      let id = String(meeting.id);
 
       if (res.data.newMeeting) {
+        id = res.data.meetingID;
         msg += `\nThere is a new Meeting ID: ${res.data.meetingID}`;
       }
 
       alert(msg);
+      history.push(routes.MANAGE + `/${id}/view`);
+      setLoadToggle(s => !s);
     }
   };
 
   return (
     <Page className='manage-page' title='Manage a Meeting'>
-      <IDInput meetingID={meeting?.id} onSubmit={handleIDSubmit} onDelete={handleDelete} />
+      <IDInput meetingID={meeting?.id} onSubmit={handleIDSubmit} onDelete={handleDelete} onEdit={handleEdit} />
       <hr />
       {isLoading ? (
         <LinearProgress />

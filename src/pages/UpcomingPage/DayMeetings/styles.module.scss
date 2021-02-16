@@ -12,6 +12,10 @@
 
     &:hover {
       color: #094fb9;
+      .title a {
+        color: #094fb9;
+        text-decoration: underline !important;
+      }
 
       .options {
         display: flex;
@@ -33,6 +37,11 @@
 
       .bottom {
         font-size: 10pt;
+      }
+
+      .title a {
+        text-decoration: none;
+        color: inherit;
       }
     }
 

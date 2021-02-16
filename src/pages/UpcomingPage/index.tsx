@@ -54,7 +54,7 @@ export const UpcomingPage = () => {
   };
 
   const handleEdit = (id: string) => {
-    history.push(`${routes.MANAGE}?meetingID=${id}`);
+    history.push(`${routes.MANAGE}/${id}/edit`);
   };
 
   const handleJoin = async (id: string) => {
