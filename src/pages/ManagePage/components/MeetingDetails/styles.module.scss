@@ -1,0 +1,27 @@
+.manage-details {
+  margin-top: -0.5em;
+
+  .show-btn {
+    color: rgb(9, 83, 153);
+    text-transform: initial;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .checked-opt {
+    display: flex;
+
+    .check,
+    .clear {
+      transform: scale(0.7);
+      margin-left: -5px;
+    }
+
+    .check {
+      color: green;
+    }
+    .clear {
+      color: #555555;
+    }
+  }
+}

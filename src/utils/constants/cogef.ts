@@ -16,4 +16,4 @@ export const ministries = [
   ['admin', 'Administration'],
   ['trustees', 'Trustees'],
   ['pastors', 'Pastors'],
-];
+].sort(([, a], [, b]) => (a > b ? 1 : -1));
