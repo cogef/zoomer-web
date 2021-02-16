@@ -19,6 +19,7 @@ export const formToMeetingRequest = (values: Values) => {
       mute_upon_entry: values.settings.mute_upon_entry,
       auto_recording: values.settings.auto_recording ? 'local' : undefined,
       waiting_room: values.settings.waiting_room,
+      use_pmi: false,
     },
   };
   return req;

@@ -19,7 +19,7 @@ export const ManagePage = () => {
   const handleIDSubmit = async (values: IDValues) => {
     const id = values.meetingID.replace(/ +/g, '');
     if (id && id !== qMeetingID) {
-      history.push(routes.MANAGE + `/${id}/edit`);
+      history.push(routes.MANAGE + `/${id}/view`);
     }
   };
 

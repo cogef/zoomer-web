@@ -26,7 +26,7 @@ export type MeetingRequest = {
     join_before_host: boolean;
     mute_upon_entry: boolean;
     watermark?: never; // boolean;
-    use_pmi?: never; // boolean;
+    use_pmi: false; // boolean;
     approval_type?: never; // 0 | 1 | 2 (default, no registration);
     registration_type?: never; // 1  | 2 | 3;
     audio?: never; //'both' (default) | 'telephony' | 'voip';
