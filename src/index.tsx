@@ -6,12 +6,15 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { AuthProvider } from './utils/auth';
 import 'services/dev';
+import { IsAdminProvider } from 'utils/zoomer/adminContext';
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
       <AuthProvider>
-        <App />
+        <IsAdminProvider>
+          <App />
+        </IsAdminProvider>
       </AuthProvider>
     </Router>
   </React.StrictMode>,

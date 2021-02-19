@@ -3,11 +3,14 @@ import { useFormik } from 'formik';
 import { Topbar } from 'layouts/components/Topbar';
 import { getDotNotationProp } from 'utils/functions';
 import { useQuery } from 'utils/hooks';
+import { useCurrentPageAnalytics } from 'utils/hooks/useAnalytics';
 import { getStartURL } from 'utils/zoomer';
 import * as yup from 'yup';
 import './styles.scss';
 
 export const HostJoinPage = () => {
+  useCurrentPageAnalytics('Host Join');
+
   const params = useQuery();
 
   const meetingID = params.get('meetingID') || initialValues.meetingID;

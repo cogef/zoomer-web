@@ -3,7 +3,11 @@ export type Occurrence = {
   meetingID: string;
   startDate: number;
   endDate: number;
-  hostEmail: string;
+  host: {
+    email: string;
+    name: string;
+    ministry: string;
+  };
   isSeudo: boolean;
   sequence: number;
   totalOccurrences: number;

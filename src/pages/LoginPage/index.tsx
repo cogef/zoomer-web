@@ -5,8 +5,11 @@ import { NavLink, Redirect } from 'react-router-dom';
 import { Topbar } from 'layouts/components/Topbar';
 import { routes } from 'routes';
 import { OrDivider } from './OrDivider';
+import { useCurrentPageAnalytics } from 'utils/hooks/useAnalytics';
 
 export const LoginPage = () => {
+  useCurrentPageAnalytics('Login');
+
   const [user] = useAuth();
 
   if (user) {

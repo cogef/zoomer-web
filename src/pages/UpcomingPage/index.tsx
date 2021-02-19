@@ -1,24 +1,35 @@
-import { LinearProgress } from '@material-ui/core';
+import { FormControlLabel, LinearProgress, Switch } from '@material-ui/core';
 import { Page } from 'components/Page';
 import { format, isThisYear, isToday } from 'date-fns';
 import { startOfDay } from 'date-fns/esm';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { routes } from 'routes';
+import { useAuth } from 'utils/auth';
 import { entriesOf } from 'utils/functions';
 import { useDynamicRef, useScrollBottom } from 'utils/hooks';
+import { useCurrentPageAnalytics } from 'utils/hooks/useAnalytics';
 import { deleteMeeting, getStartURL } from 'utils/zoomer';
+import { useIsAdmin } from 'utils/zoomer/adminContext';
 import { useMeetings } from 'utils/zoomer/hooks';
 import { Occurrence } from 'utils/zoomer/types';
 import { DayMeetings } from './DayMeetings';
 
 export const UpcomingPage = () => {
+  useCurrentPageAnalytics('Upcoming');
+
   const history = useHistory();
   const PAGE_SIZE = 20;
   const [limit, setLimit] = useState(PAGE_SIZE);
+  const [showAll, setShowAll] = useState(false);
+
+  const [user] = useAuth();
+  const isAdmin = useIsAdmin();
+
   const [meetings, isLoading, err, reloadMeetings] = useMeetings({
     limit: limit,
     start: startOfDay(new Date()).valueOf(),
+    ...(showAll ? {} : { hostEmail: user!.email! }),
   });
 
   const scrollBottom = useScrollBottom();
@@ -82,6 +93,14 @@ export const UpcomingPage = () => {
 
   return (
     <Page className='manage-page' title='Upcoming Meetings'>
+      {isAdmin && (
+        <div>
+          <FormControlLabel
+            label='Show All'
+            control={<Switch color='primary' checked={showAll} onChange={() => setShowAll(s => !s)} />}
+          />
+        </div>
+      )}
       {entriesOf(dayGroups).map(([day, meetings]) => (
         <DayMeetings
           key={day}
@@ -90,6 +109,7 @@ export const UpcomingPage = () => {
           onDelete={handleDelete}
           onEdit={handleEdit}
           onJoin={handleJoin}
+          showHost={showAll}
         />
       ))}
       {isLoading && <LinearProgress />}

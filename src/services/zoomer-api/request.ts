@@ -1,4 +1,4 @@
-import { auth } from 'services/firebase';
+import { analytics, auth } from 'services/firebase';
 
 export const zoomerRequest = async <T>(opts: RequestProps): Promise<Response<T>> => {
   const jwt = (await auth.currentUser?.getIdToken(true)) || '';
@@ -6,10 +6,12 @@ export const zoomerRequest = async <T>(opts: RequestProps): Promise<Response<T>>
     console.log('JWT not generated');
   }
 
+  const apiURL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://api.cogef.org/zoomer';
+
   const endpoint = opts.path || '';
   const query = opts.qParams ? `?${new URLSearchParams(opts.qParams as any).toString()}` : '';
 
-  const res = await fetch(`https://api.cogef.org/zoomer${endpoint}${query}`, {
+  const res = await fetch(`${apiURL}${endpoint}${query}`, {
     headers: {
       authorization: `Bearer ${jwt}`,
       'Content-Type': 'application/json',
@@ -23,7 +25,9 @@ export const zoomerRequest = async <T>(opts: RequestProps): Promise<Response<T>>
 
   if (status >= 400) {
     console.error({ ZOOMER_ERROR: body });
-    return { err: body.errorMessage || res.statusText, status, data: null };
+    const errMsg = body.errorMessage || res.statusText;
+    analytics.logEvent('exception', { error_message: errMsg });
+    return { err: errMsg, status, data: null };
   }
   return { err: null, status, data: body };
 };

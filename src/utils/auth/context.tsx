@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import firebase from 'firebase/app';
 import { ParentProps } from '../propTypes';
-import { auth } from '../../services/firebase';
+import { analytics, auth } from '../../services/firebase';
 
 const initialState: AuthState = [auth.currentUser, true, null];
 const authContext = createContext(initialState);
@@ -15,6 +15,8 @@ export const AuthProvider = (props: Props) => {
     auth.onAuthStateChanged(
       fbUser => {
         setState([fbUser, false, null]);
+        analytics.setUserId(fbUser?.uid || 'anonymous');
+        analytics.setUserProperties({ name: fbUser?.displayName, email: fbUser?.email });
       },
       error => {
         setState([null, false, error]);
@@ -25,6 +27,6 @@ export const AuthProvider = (props: Props) => {
   return <authContext.Provider value={state}>{props.children}</authContext.Provider>;
 };
 
-type AuthState = [firebase.User | null, boolean, firebase.auth.Error | null];
+type AuthState = [User: firebase.User | null, IsLoading: boolean, Error: firebase.auth.Error | null];
 
 type Props = ParentProps;
