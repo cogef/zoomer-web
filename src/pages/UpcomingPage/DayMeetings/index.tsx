@@ -15,6 +15,7 @@ export const DayMeetings = (props: Props) => {
       </Typography>
       {props.meetings.map(meeting => (
         <div key={meeting.occurrenceID} className={styles.meeting}>
+          {props.showHost && <Typography className={styles.host}>Hosted by {meeting.host.name}</Typography>}
           <Grid container spacing={5}>
             <Grid item xs={6} md={6} className={styles.info}>
               <Grid container spacing={2}>
@@ -79,6 +80,7 @@ const formatSeq = (occ: Occurrence) => {
 };
 
 type Props = {
+  showHost?: boolean;
   day: string;
   meetings: Occurrence[];
   onJoin: (id: string) => void;

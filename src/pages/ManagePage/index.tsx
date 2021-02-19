@@ -5,11 +5,14 @@ import { useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { routes } from 'routes';
 import { Meeting } from 'services/zoomer-api';
+import { useCurrentPageAnalytics } from 'utils/hooks/useAnalytics';
 import { deleteMeeting, formToMeetingRequest, getMeeting, meetingToFormVals, updateMeeting } from 'utils/zoomer';
 import { IDInput, IDValues } from './components/IDInput';
 import { MeetingDetails } from './components/MeetingDetails';
 
 export const ManagePage = () => {
+  useCurrentPageAnalytics('Manage');
+
   const [meeting, setMeeting] = useState<Meeting>();
   const [isLoading, setLoading] = useState(false);
   const [loadToggle, setLoadToggle] = useState(false);

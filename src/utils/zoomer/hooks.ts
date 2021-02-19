@@ -6,7 +6,7 @@ export const useMeetings = (opts: MeetingsOptions) => {
   const getter = useCallback(
     () => getMeetings(opts),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [opts.limit, opts.start, opts.end, opts.lastMeetingID, opts.lastOccurrenceID]
+    [opts.limit, opts.start, opts.end, opts.lastMeetingID, opts.lastOccurrenceID, opts.hostEmail]
   );
   return useResource(getter);
 };
