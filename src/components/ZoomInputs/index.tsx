@@ -39,7 +39,7 @@ export const ZoomInputs = (props: Props) => {
     initialValues: props.initialValues,
     enableReinitialize: true,
     validationSchema,
-    onSubmit: async (values, { setSubmitting }) => {
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
       const weekly_days = [...values.recurrence.weekly_days] as typeof values.recurrence.weekly_days;
       // if no day chosen
       if (weekly_days.every(d => !d)) {
@@ -50,6 +50,7 @@ export const ZoomInputs = (props: Props) => {
 
       await props.onSubmit({ ...values, recurrence });
       setSubmitting(false);
+      resetForm();
     },
   });
 
