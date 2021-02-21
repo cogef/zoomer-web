@@ -12,7 +12,7 @@ export const Sidebar = (props: Props) => {
       <div className='separator' />
       <SidebarItem path={routes.SCHEDULE}>Schedule Meeting</SidebarItem>
       <SidebarItem path={routes.MANAGE}>Manage Meeting</SidebarItem>
-      <SidebarItem path={routes.UPCOMING}>Upcoming Meetings</SidebarItem>
+      <SidebarItem path={routes.MEETINGS}>Meetings</SidebarItem>
     </div>
   );
 };

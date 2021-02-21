@@ -1,13 +1,48 @@
 import { Button, Grid, Typography } from '@material-ui/core';
 import { format } from 'date-fns';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { routes } from 'routes';
 import { classes } from 'utils/functions/react';
 import { formatMeetingID } from 'utils/functions/zoom';
+import { deleteMeeting, getStartURL } from 'utils/zoomer';
 import { Occurrence } from 'utils/zoomer/types';
 import styles from './styles.module.scss';
 
 export const DayMeetings = (props: Props) => {
+  const history = useHistory();
+
+  const handleDelete = async (id: string) => {
+    const ok = window.confirm(
+      'Deleting this meeting will delete all of its occurrences. Are you sure you want to delete this meeting?'
+    );
+    if (ok) {
+      const res = await deleteMeeting(id);
+      if (res.err) {
+        alert('An error has occurred');
+      } else {
+        alert('Meeting deleted');
+        props.reloadMeetings();
+      }
+    }
+  };
+
+  const handleEdit = (id: string) => {
+    history.push(`${routes.MANAGE}/${id}/edit`);
+  };
+
+  const handleJoin = async (id: string) => {
+    const res = await getStartURL(id);
+    if (res.status === 404) {
+      alert('Meeting not found');
+    } else if (res.status === 401) {
+      alert('Incorrect host join key');
+    } else if (res.err !== null) {
+      alert('An unknown error has occurred');
+    } else {
+      window.open(res.data.startURL);
+    }
+  };
+
   return (
     <div className={styles.dayMeetings}>
       <Typography variant='body2' className={styles.day}>
@@ -38,7 +73,7 @@ export const DayMeetings = (props: Props) => {
                 className={styles.btn}
                 size='small'
                 variant='outlined'
-                onClick={() => props.onJoin(meeting.meetingID)}
+                onClick={() => handleJoin(meeting.meetingID)}
               >
                 Join
               </Button>
@@ -46,7 +81,7 @@ export const DayMeetings = (props: Props) => {
                 className={styles.btn}
                 size='small'
                 variant='outlined'
-                onClick={() => props.onEdit(meeting.meetingID)}
+                onClick={() => handleEdit(meeting.meetingID)}
               >
                 Edit
               </Button>
@@ -54,7 +89,7 @@ export const DayMeetings = (props: Props) => {
                 className={styles.btn}
                 size='small'
                 variant='outlined'
-                onClick={() => props.onDelete(meeting.meetingID)}
+                onClick={() => handleDelete(meeting.meetingID)}
               >
                 Delete
               </Button>
@@ -83,7 +118,5 @@ type Props = {
   showHost?: boolean;
   day: string;
   meetings: Occurrence[];
-  onJoin: (id: string) => void;
-  onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
+  reloadMeetings: () => void;
 };
