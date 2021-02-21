@@ -1,11 +1,12 @@
 import { AppLayout } from 'layouts';
 import { HostJoinPage } from 'pages/HostJoinPage';
 import { ManagePage } from 'pages/ManagePage';
-import { UpcomingPage } from 'pages/UpcomingPage';
+import { MeetingsPage } from 'pages/MeetingsPage';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { PrivateRoute } from '../components/PrivateRoute';
 import { LoginPage } from '../pages/LoginPage';
 import { SchedulePage } from '../pages/SchedulePage';
+import { routes } from './routes';
 
 export const RootRoute = () => (
   <Switch>
@@ -36,24 +37,11 @@ const PageRoutes = () => (
         <ManagePage />
       </PrivateRoute>
 
-      <PrivateRoute exact path={routes.UPCOMING}>
-        <UpcomingPage />
+      <PrivateRoute path={routes.MEETINGS}>
+        <MeetingsPage />
       </PrivateRoute>
 
       <Redirect to={routes.NOT_FOUND} />
     </Switch>
   </AppLayout>
 );
-
-export const routes = {
-  HOME: '/',
-  LOGIN: '/login',
-  NOT_FOUND: '/404',
-  HOST_JOIN: '/host-join',
-  SCHEDULE: '/schedule',
-  MANAGE: '/manage',
-  UPCOMING: '/upcoming',
-} as const;
-
-type PageRoute = keyof typeof routes;
-export type RoutePath = typeof routes[PageRoute];

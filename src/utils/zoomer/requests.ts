@@ -54,9 +54,10 @@ export const getAdminStatus = () => {
 
 export type MeetingsOptions = {
   limit: number;
-  start: number;
+  start?: number;
   end?: number;
   hostEmail?: string;
+  dir?: 'asc' | 'desc';
 } & (
   | { lastOccurrenceID: string | number; lastMeetingID: string | number }
   | { lastOccurrenceID?: never; lastMeetingID?: never }
