@@ -1,4 +1,6 @@
-import { analytics, auth } from 'services/firebase';
+import { captureException } from '@sentry/minimal';
+import env from 'env';
+import { auth } from 'services/firebase';
 
 export const zoomerRequest = async <T>(opts: RequestProps): Promise<Response<T>> => {
   const jwt = (await auth.currentUser?.getIdToken(true)) || '';
@@ -6,7 +8,7 @@ export const zoomerRequest = async <T>(opts: RequestProps): Promise<Response<T>>
     console.log('JWT not generated');
   }
 
-  const apiURL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://api.cogef.org/zoomer';
+  const apiURL = env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://api.cogef.org/zoomer';
 
   const endpoint = opts.path || '';
   const query = opts.qParams ? `?${new URLSearchParams(opts.qParams as any).toString()}` : '';
@@ -26,7 +28,7 @@ export const zoomerRequest = async <T>(opts: RequestProps): Promise<Response<T>>
   if (status >= 400) {
     console.error({ ZOOMER_ERROR: body });
     const errMsg = body.errorMessage || res.statusText;
-    analytics.logEvent('exception', { error_message: errMsg });
+    captureException(new Error(errMsg));
     return { err: errMsg, status, data: null };
   }
   return { err: null, status, data: body };

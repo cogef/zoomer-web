@@ -50,7 +50,14 @@ export const UpcomingTab = (props: Props) => {
   return (
     <>
       {entriesOf(dayGroups).map(([day, meetings]) => (
-        <DayMeetings key={day} day={day} meetings={meetings} showHost={props.showAll} reloadMeetings={reloadMeetings} />
+        <DayMeetings
+          key={day}
+          day={day}
+          meetings={meetings}
+          showHost={props.showAll}
+          showJoin
+          reloadMeetings={reloadMeetings}
+        />
       ))}
       {isLoading && <LinearProgress />}
     </>

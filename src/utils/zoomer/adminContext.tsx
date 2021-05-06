@@ -1,3 +1,4 @@
+import { captureException } from '@sentry/react';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth } from 'utils/auth';
 import { ParentProps } from 'utils/propTypes';
@@ -16,6 +17,7 @@ export const IsAdminProvider = (props: ParentProps) => {
       getAdminStatus().then(res => {
         if (res.err !== null) {
           alert('There was a problem checking your admin privilege');
+          captureException(res.err);
         } else {
           setIsAdmin(res.data?.isAdmin);
         }

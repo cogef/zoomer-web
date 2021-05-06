@@ -52,7 +52,10 @@
     }
 
     .options {
-      display: none;
+      @media (min-width: 615px) {
+        display: none;
+      }
+
       align-items: center;
     }
 

@@ -52,7 +52,7 @@ export const DayMeetings = (props: Props) => {
         <div key={meeting.occurrenceID} className={styles.meeting}>
           {props.showHost && <Typography className={styles.host}>Hosted by {meeting.host.name}</Typography>}
           <Grid container spacing={5}>
-            <Grid item xs={6} md={6} className={styles.info}>
+            <Grid item xs={12} md={6} className={styles.info}>
               <Grid container spacing={2}>
                 <Grid item xs={12} md={6} className={styles.left}>
                   <Typography className={styles.top}>{formatDuration(meeting)}</Typography>
@@ -68,15 +68,18 @@ export const DayMeetings = (props: Props) => {
               </Grid>
             </Grid>
 
-            <Grid className={styles.options} item xs={6} md={6}>
-              <Button
-                className={styles.btn}
-                size='small'
-                variant='outlined'
-                onClick={() => handleJoin(meeting.meetingID)}
-              >
-                Join
-              </Button>
+            <Grid className={styles.options} item xs={12} md={6}>
+              {props.showJoin && (
+                <Button
+                  className={styles.btn}
+                  size='small'
+                  variant='contained'
+                  color='primary'
+                  onClick={() => handleJoin(meeting.meetingID)}
+                >
+                  Start
+                </Button>
+              )}
               <Button
                 className={styles.btn}
                 size='small'
@@ -116,6 +119,7 @@ const formatSeq = (occ: Occurrence) => {
 
 type Props = {
   showHost?: boolean;
+  showJoin?: boolean;
   day: string;
   meetings: Occurrence[];
   reloadMeetings: () => void;
