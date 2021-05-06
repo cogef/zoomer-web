@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import firebase from 'firebase/app';
 import { ParentProps } from '../propTypes';
 import { analytics, auth } from '../../services/firebase';
-import * as Sentry from '@sentry/react';
+import { captureException, setUser } from '@sentry/react';
 
 const initialState: AuthState = [auth.currentUser, true, null];
 const authContext = createContext(initialState);
@@ -18,7 +18,7 @@ export const AuthProvider = (props: Props) => {
         setState([fbUser, false, null]);
         analytics.setUserId(fbUser?.uid || 'anonymous');
         analytics.setUserProperties({ name: fbUser?.displayName, email: fbUser?.email });
-        Sentry.setUser(
+        setUser(
           fbUser
             ? {
                 id: fbUser.uid || 'anonymous',
@@ -31,6 +31,7 @@ export const AuthProvider = (props: Props) => {
       },
       error => {
         setState([null, false, error]);
+        captureException(error);
       }
     );
   }, []);

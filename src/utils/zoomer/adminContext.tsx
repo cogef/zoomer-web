@@ -16,8 +16,8 @@ export const IsAdminProvider = (props: ParentProps) => {
     if (user) {
       getAdminStatus().then(res => {
         if (res.err !== null) {
-          alert('There was a problem checking your admin privilege');
           captureException(res.err);
+          alert('There was a problem checking your admin privilege');
         } else {
           setIsAdmin(res.data?.isAdmin);
         }
