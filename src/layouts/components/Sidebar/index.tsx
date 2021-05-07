@@ -13,6 +13,7 @@ export const Sidebar = (props: Props) => {
       <SidebarItem path={routes.SCHEDULE}>Schedule Meeting</SidebarItem>
       <SidebarItem path={routes.MANAGE}>Manage Meeting</SidebarItem>
       <SidebarItem path={routes.MEETINGS}>Meetings</SidebarItem>
+      <SidebarItem path={routes.HOST_JOIN}>Host Join</SidebarItem>
     </div>
   );
 };
