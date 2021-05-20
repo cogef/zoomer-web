@@ -50,4 +50,5 @@ export type Meeting = {
   start_url: string;
   join_url: string;
   occurrences?: { occurrence_id: string; start_time: string; duration: number; status: string }[];
+  share_url?: string;
 } & MeetingRequest;

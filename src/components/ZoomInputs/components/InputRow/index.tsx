@@ -8,7 +8,7 @@ export const InputRow = (props: Props) => {
       <Grid item xs={12} md={3} lg={2}>
         <Typography className='label'>{props.label || ''}</Typography>
       </Grid>
-      <Grid item xs={12} md={9} lg={props.wide ? 8 : 5}>
+      <Grid item xs={12} md={9} lg={props.wide ? 8 : 5} className='row-body'>
         {props.children}
       </Grid>
     </Grid>

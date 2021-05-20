@@ -80,6 +80,16 @@ export const MeetingDetails = (props: Props) => {
           </CheckedOpt>
         </InputRow>
       </Section>
+
+      {meeting.share_url && (
+        <Section>
+          <InputRow label='Recordings'>
+            <a href={meeting.share_url} target='blank' className={styles['nowrap']}>
+              {meeting.share_url}
+            </a>
+          </InputRow>
+        </Section>
+      )}
     </div>
   );
 };
