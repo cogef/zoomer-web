@@ -1,4 +1,6 @@
 import { Button, Icon, Typography } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+import { routes } from 'routes';
 import { logout, useAuth } from '../../../utils/auth';
 import './styles.scss';
 
@@ -14,7 +16,9 @@ export const Topbar = (props: Props) => {
           </Button>
         )}
         <Typography variant='h4' className='title'>
-          <span className='title__zoom'>Zoom</span> Scheduler
+          <Link to={routes.HOME}>
+            <span className='title__zoom'>Zoom</span> Scheduler
+          </Link>
         </Typography>
       </div>
       <div className='topbar__right'>

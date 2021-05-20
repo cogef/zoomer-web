@@ -6,4 +6,9 @@
   .label {
     font-weight: bold;
   }
+
+  .row-body {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }

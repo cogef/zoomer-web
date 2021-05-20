@@ -24,6 +24,11 @@
     margin-left: 20px;
     font-size: clamp(25px, 3vw, 38px);
 
+    a {
+      color: white;
+      text-decoration: none;
+    }
+
     &__zoom {
       color: #49adff;
       font-weight: bold;
