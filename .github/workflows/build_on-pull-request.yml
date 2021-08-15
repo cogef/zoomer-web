@@ -1,4 +1,3 @@
-# Workflow to run a test build
 name: build
 
 on:

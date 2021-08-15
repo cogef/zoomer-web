@@ -1,4 +1,4 @@
-name: Deploy to Prod
+name: prod-deploy
 
 on:
   workflow_dispatch:
@@ -36,5 +36,3 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
           projectId: '${{ secrets.REACT_APP_FIREBASE_PROJECT_ID }}'
           channelId: live
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
