@@ -27,7 +27,7 @@ export const zoomerRequest = async <T>(opts: RequestProps): Promise<Response<T>>
 
   if (status >= 400) {
     console.error({ ZOOMER_ERROR: body });
-    const errMsg = body.errorMessage || res.statusText;
+    const errMsg = body.errorMessage || body.error || res.statusText;
     captureException(new Error(errMsg));
     return { err: errMsg, status, data: null };
   }
