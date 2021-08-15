@@ -8,12 +8,12 @@ export const zoomerRequest = async <T>(opts: RequestProps): Promise<Response<T>>
     console.log('JWT not generated');
   }
 
-  const apiURL = env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://api.cogef.org/zoomer';
+  const apiHost = env.API_HOST;
 
   const endpoint = opts.path || '';
   const query = opts.qParams ? `?${new URLSearchParams(opts.qParams as any).toString()}` : '';
 
-  const res = await fetch(`${apiURL}${endpoint}${query}`, {
+  const res = await fetch(`${apiHost}${endpoint}${query}`, {
     headers: {
       authorization: `Bearer ${jwt}`,
       'Content-Type': 'application/json',

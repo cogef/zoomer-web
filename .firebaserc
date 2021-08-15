@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "zoomer-300722"
-  }
+    "default": "zoomer-300722",
+    "staging": "zoomer-dev"
+  },
+  "targets": {}
 }
