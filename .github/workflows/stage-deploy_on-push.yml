@@ -1,39 +1,24 @@
-# Workflow to run a test build when changes are made to dev
-name: dev-build
+name: Deploy to Stage
 
-# Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [dev]
-  pull_request:
-    branches: [dev]
-
-  # Allows you to run this workflow manually from the Actions tab
+    branches:
+      - master
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains "build" and "deploy" jobs
-  build:
+  build_and_deploy:
+    environment: staging
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checkout master branch
       - uses: actions/checkout@v2
-        with:
-          ref: dev
 
-      # Install npm packages
       - name: Install dependencies
-        run: npm install
-
-      # Run npm build process
-      - name: Build
         run: npm run build
         env:
-          GENERATE_SOURCEMAP: false
+          GENERATE_SOURCEMAP: true
+          REACT_APP_API_HOST: ${{ secrets.REACT_APP_API_HOST }}
           REACT_APP_APP_NAME: ${{ secrets.REACT_APP_APP_NAME }}
           REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
           REACT_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.REACT_APP_FIREBASE_AUTH_DOMAIN }}
@@ -42,4 +27,11 @@ jobs:
           REACT_APP_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.REACT_APP_FIREBASE_MESSAGING_SENDER_ID }}
           REACT_APP_FIREBASE_APP_ID: ${{ secrets.REACT_APP_FIREBASE_APP_ID }}
           REACT_APP_FIREBASE_MEASUREMENT_ID: ${{ secrets.REACT_APP_FIREBASE_MEASUREMENT_ID }}
-          REACT_APP_SENTRY_DSN: ${{ secrets.REACT_APP_SENTRY_DSN }}
+          REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+          projectId: '${{ secrets.REACT_APP_FIREBASE_PROJECT_ID }}'
+          channelId: live

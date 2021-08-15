@@ -1,7 +1,7 @@
+import env from 'env';
+import 'firebase/analytics';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import 'firebase/analytics';
-import env from 'env';
 
 const firebaseConfig = {
   apiKey: env.FIREBASE_API_KEY,
@@ -18,3 +18,7 @@ const app = firebase.initializeApp(firebaseConfig);
 export const auth = app.auth();
 
 export const analytics = app.analytics();
+
+if (env.NODE_ENV === 'development') {
+  auth.useEmulator(env.FIREBASE_EMULATOR_HOST);
+}
