@@ -1,5 +1,6 @@
 const env = {
-  NODE_ENV: process.env.NODE_ENV || 'development',
+  // Can't override NODE_ENV
+  NODE_ENV: process.env.REACT_APP_ENVIRONMENT || 'development',
   FIREBASE_EMULATOR_HOST: process.env.REACT_APP_FIREBASE_AUTH_EMULATOR_HOST || 'http://localhost:9099',
   FIREBASE_API_KEY: process.env.REACT_APP_FIREBASE_API_KEY || '',
   FIREBASE_AUTH_DOMAIN: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN || '',
