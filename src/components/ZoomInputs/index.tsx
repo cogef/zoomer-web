@@ -17,6 +17,7 @@ import 'date-fns';
 import { addMinutes } from 'date-fns';
 import { useFormik } from 'formik';
 import { useMemo } from 'react';
+import { rrulestr } from 'rrule';
 import {
   ministries,
   recurrenceMaxIntervals,
@@ -31,7 +32,6 @@ import { InputRow } from '../../components/ZoomInputs/components/InputRow';
 import { InputSubRow } from '../../components/ZoomInputs/components/InputSubRow';
 import { Section } from '../../components/ZoomInputs/components/Section';
 import { zoomToRFCRecurrence } from './recurrence';
-import { rrulestr } from 'rrule';
 import './styles.scss';
 
 export const ZoomInputs = (props: Props) => {
@@ -48,9 +48,12 @@ export const ZoomInputs = (props: Props) => {
       }
       const recurrence: Values['recurrence'] = { ...values.recurrence, weekly_days };
 
-      await props.onSubmit({ ...values, recurrence });
+      const shouldReset = await props.onSubmit({ ...values, recurrence });
       setSubmitting(false);
-      resetForm();
+
+      if (shouldReset) {
+        resetForm();
+      }
     },
   });
 
@@ -559,7 +562,8 @@ export const ZoomInputs = (props: Props) => {
 type Props = {
   initialValues: Values;
   action: string;
-  onSubmit: (values: Values) => any;
+  /** Returns weather or not to reset the form */
+  onSubmit: (values: Values) => boolean | Promise<boolean>;
 };
 
 const minDate = () => addMinutes(new Date(), 15);

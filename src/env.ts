@@ -1,6 +1,8 @@
 const env = {
   // Can't override NODE_ENV
   NODE_ENV: process.env.REACT_APP_ENVIRONMENT || 'development',
+  API_HOST: process.env.REACT_APP_API_HOST || 'http://localhost:8000',
+  APP_NAME: process.env.REACT_APP_APP_NAME || 'Zoom Scheduler',
   FIREBASE_EMULATOR_HOST: process.env.REACT_APP_FIREBASE_AUTH_EMULATOR_HOST || 'http://localhost:9099',
   FIREBASE_API_KEY: process.env.REACT_APP_FIREBASE_API_KEY || '',
   FIREBASE_AUTH_DOMAIN: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN || '',
@@ -9,9 +11,7 @@ const env = {
   FIREBASE_MESSAGING_SENDER_ID: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID || '',
   FIREBASE_APP_ID: process.env.REACT_APP_FIREBASE_APP_ID || '',
   FIREBASE_MEASUREMENT_ID: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID || '',
-  APP_NAME: process.env.REACT_APP_APP_NAME || 'Zoom Scheduler',
   SENTRY_DSN: process.env.REACT_APP_SENTRY_DSN || '',
-  API_HOST: process.env.REACT_APP_API_HOST || 'http://localhost:8000',
 };
 
 export default env;

@@ -14,8 +14,10 @@ export const SchedulePage = () => {
     console.log({ res });
     if (res.err !== null) {
       alert(`Error: ${res.err}`);
+      return false;
     } else {
       alert(`Meeting Created with ID "${res.data.meetingID} :: Host Join Key: ${res.data.hostJoinKey}`);
+      return true;
     }
   };
 

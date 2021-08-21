@@ -23,7 +23,9 @@ export const HostJoinPage = () => {
       console.log({ values });
       const meetingID = values.meetingID.replace(/ +/g, '');
       const res = await getStartURL(meetingID, values.hostJoinKey);
+
       setSubmitting(false);
+
       if (res.status === 404) {
         alert('Meeting not found');
       } else if (res.status === 401) {

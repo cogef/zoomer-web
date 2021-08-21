@@ -69,7 +69,7 @@ export const ManagePage = () => {
       const res = await updateMeeting(String(meeting.id), meetingReq);
       if (res.err !== null) {
         alert(res.err);
-        return;
+        return false;
       }
 
       let msg = 'Update Successful';
@@ -83,7 +83,9 @@ export const ManagePage = () => {
       alert(msg);
       history.push(routes.MANAGE + `/${id}/view`);
       setLoadToggle(s => !s);
+      return true;
     }
+    return false;
   };
 
   return (
