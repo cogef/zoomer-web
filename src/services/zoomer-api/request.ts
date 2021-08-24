@@ -1,6 +1,7 @@
 import { captureException } from '@sentry/minimal';
 import env from 'env';
 import { auth } from 'services/firebase';
+import { v4 as uuidv4 } from 'uuid';
 
 export const zoomerRequest = async <T>(opts: RequestProps): Promise<Response<T>> => {
   const jwt = (await auth.currentUser?.getIdToken(true)) || '';
@@ -17,6 +18,7 @@ export const zoomerRequest = async <T>(opts: RequestProps): Promise<Response<T>>
     headers: {
       authorization: `Bearer ${jwt}`,
       'Content-Type': 'application/json',
+      'x-request-id': uuidv4(),
     },
     method: opts.method,
     body: opts.body ? JSON.stringify(opts.body) : undefined,

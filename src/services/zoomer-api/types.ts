@@ -51,4 +51,9 @@ export type Meeting = {
   join_url: string;
   occurrences?: { occurrence_id: string; start_time: string; duration: number; status: string }[];
   share_url?: string;
-} & MeetingRequest;
+  host: {
+    ministry: string;
+    email: string;
+    name: string;
+  };
+} & Omit<MeetingRequest, 'ministry'>;

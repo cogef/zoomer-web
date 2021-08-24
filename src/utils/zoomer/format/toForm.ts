@@ -8,7 +8,7 @@ export const meetingToFormVals = (meeting: Meeting): Values => {
   return {
     topic: meeting.topic,
     agenda: meeting.agenda,
-    ministry: meeting.ministry,
+    ministry: meeting.host.ministry,
     start_time: new Date(meeting.start_time),
     duration: formatDuration(meeting.duration),
     isRecurring,
